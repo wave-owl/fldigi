@@ -10,9 +10,6 @@ dnl contain other characters or be empty
 m4_define(FLDIGI_MAJOR, [4])
 m4_define(FLDIGI_MINOR, [2])
 m4_define(FLDIGI_PATCH, [.13])
-m4_define(FLARQ_MAJOR,  [4])
-m4_define(FLARQ_MINOR,  [3])
-m4_define(FLARQ_PATCH,  [.9])
 
 AC_INIT([fldigi],[FLDIGI_MAJOR.FLDIGI_MINOR[]FLDIGI_PATCH],[fldigi-devel@sourceforge.net])
 
@@ -21,19 +18,11 @@ AC_SUBST([FLDIGI_VERSION_MAJOR], [FLDIGI_MAJOR])
 AC_SUBST([FLDIGI_VERSION_MINOR], [FLDIGI_MINOR])
 AC_SUBST([FLDIGI_VERSION_PATCH], [FLDIGI_PATCH])
 AC_SUBST([FLDIGI_VERSION], [FLDIGI_MAJOR.FLDIGI_MINOR[]FLDIGI_PATCH])
-AC_SUBST([FLARQ_VERSION_MAJOR], [FLARQ_MAJOR])
-AC_SUBST([FLARQ_VERSION_MINOR], [FLARQ_MINOR])
-AC_SUBST([FLARQ_VERSION_PATCH], [FLARQ_PATCH])
-AC_SUBST([FLARQ_VERSION], [FLARQ_MAJOR.FLARQ_MINOR[]FLARQ_PATCH])
 # define in config.h
 AC_DEFINE([FLDIGI_VERSION_MAJOR], [FLDIGI_MAJOR], [Fldigi major version number])
 AC_DEFINE([FLDIGI_VERSION_MINOR], [FLDIGI_MINOR], [Fldigi minor version number])
 AC_DEFINE([FLDIGI_VERSION_PATCH], ["FLDIGI_PATCH"], [Fldigi patch/alpha version string])
-AC_DEFINE([FLARQ_VERSION_MAJOR], [FLARQ_MAJOR], [Flarq major version number])
-AC_DEFINE([FLARQ_VERSION_MINOR], [FLARQ_MINOR], [Flarq minor version number])
-AC_DEFINE([FLARQ_VERSION_PATCH], ["FLARQ_PATCH"], [Flarq patch/alpha version string])
 AC_DEFINE([FLDIGI_VERSION], ["FLDIGI_MAJOR.FLDIGI_MINOR[]FLDIGI_PATCH"], [Fldigi version string])
-AC_DEFINE([FLARQ_VERSION], ["FLARQ_MAJOR.FLARQ_MINOR[]FLARQ_PATCH"], [Flarq version string])
 
 AC_SUBST([AC_CONFIG_ARGS], [$ac_configure_args])
 
@@ -55,32 +44,26 @@ AC_CONFIG_MACRO_DIR([m4])
 
 
 FLDIGI_AUTHORS="Dave Freese, Stelios Bounanos, and others"
-FLARQ_AUTHORS="Dave Freese, Robert Stiles, and others"
 PACKAGE_HOME="https://www.w1hkj.org/Fldigi.html"
 PACKAGE_DL="https://www.w1hkj.org/download.html"
 PACKAGE_PROJ="http://sourceforge.net/projects/fldigi/files/"
 PACKAGE_NEWBUG=
 PACKAGE_DOCS="https://www.w1hkj.org/FldigiHelp/index.html"
 PACKAGE_GUIDE="https://www.w1hkj.org/beginners.html"
-FLARQ_DOCS="https://www.w1hkj.org/FlarqHelpFiles/flarq.html"
 AC_DEFINE_UNQUOTED([FLDIGI_AUTHORS], ["$FLDIGI_AUTHORS"], [Fldigi authors])
-AC_DEFINE_UNQUOTED([FLARQ_AUTHORS], ["$FLARQ_AUTHORS"], [Flarq authors])
 AC_DEFINE_UNQUOTED([PACKAGE_HOME], ["$PACKAGE_HOME"], [Home page])
 AC_DEFINE_UNQUOTED([PACKAGE_DL], ["$PACKAGE_DL"], [Download page])
 AC_DEFINE_UNQUOTED([PACKAGE_PROJ], ["$PACKAGE_PROJ"], [Sourceforge page])
 AC_DEFINE_UNQUOTED([PACKAGE_NEWBUG], ["$PACKAGE_NEWBUG"], [Trac new ticket page])
 AC_DEFINE_UNQUOTED([PACKAGE_DOCS], ["$PACKAGE_DOCS"], [Docs index])
 AC_DEFINE_UNQUOTED([PACKAGE_GUIDE], ["$PACKAGE_GUIDE"], [Beginners guide])
-AC_DEFINE_UNQUOTED([FLARQ_DOCS], ["$FLARQ_DOCS"], [Flarq Docs index])
 AC_SUBST([FLDIGI_AUTHORS], [$FLDIGI_AUTHORS])
-AC_SUBST([FLARQ_AUTHORS], [$FLARQ_AUTHORS])
 AC_SUBST([PACKAGE_HOME], [$PACKAGE_HOME])
 AC_SUBST([PACKAGE_DL], [$PACKAGE_DL])
 AC_SUBST([PACKAGE_PROJ], [$PACKAGE_PROJ])
 AC_SUBST([PACKAGE_NEWBUG], [$PACKAGE_NEWBUG])
 AC_SUBST([PACKAGE_DOCS], [$PACKAGE_DOCS])
 AC_SUBST([PACKAGE_GUIDE], [$PACKAGE_GUIDE])
-AC_SUBST([FLARQ_DOCS], [$FLARQ_DOCS])
 
 
 # Checks for programs.
