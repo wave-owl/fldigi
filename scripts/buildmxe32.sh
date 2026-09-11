@@ -77,7 +77,6 @@ rm -fv src/*.exe
 make -j 4 || exit 1 
 
 $PREFIX/bin/$CROSSTARGET-strip src/fldigi.exe
-$PREFIX/bin/$CROSSTARGET-strip src/flarq.exe
 
 make nsisinst
 

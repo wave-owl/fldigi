@@ -56,36 +56,13 @@ $SNDFILE_LIBS $SAMPLERATE_LIBS $PULSEAUDIO_LIBS \
 $HAMLIB_LIBS $PNG_LIBS $XMLRPC_LIBS $INTL_LIBS $PTW32_LIBS $BFD_LIBS \
 $EXTRA_LIBS $FLXMLRPC_LIBS $LIBMBEDTLS_LIBS $LIBUDEV_LIBS $LIBGPIOD_LIBS"
 
-# CPPFLAGS
-  FLARQ_BUILD_CPPFLAGS="-I\$(srcdir) -I\$(srcdir)/include -I\$(srcdir)/fileselector \
--I\$(srcdir)/flarq-src -I\$(srcdir)/flarq-src/include"
-
   if test "x$target_darwin" = "xno"; then
     FLDIGI_BUILD_CXXFLAGS="$FLDIGI_BUILD_CXXFLAGS --param=max-vartrack-size=0"
   fi
 
-  if test "x$ac_cv_flxmlrpc" != "xyes"; then
-    FLARQ_BUILD_CPPFLAGS="$FLARQ_BUILD_CPPFLAGS -I\$(srcdir)/xmlrpcpp"
-  fi
-# CXXFLAGS
-  FLARQ_BUILD_CXXFLAGS="$FLTK_CFLAGS $X_CFLAGS $MAC_UNIVERSAL_CFLAGS $INTL_CFLAGS $PTW32_CFLAGS \
-$BFD_CFLAGS -pipe -Wall -fexceptions $OPT_CFLAGS $DEBUG_CFLAGS"
-
-  if test "x$target_mingw32" = "xyes"; then
-      FLARQ_BUILD_CXXFLAGS="-mthreads $FLARQ_BUILD_CXXFLAGS"
-  fi
-
-  if test "x$ac_cv_flxmlrpc" != "xyes"; then
-    FLARQ_BUILD_CXXFLAGS="$FLARQ_BUILD_CXXFLAGS -I\$(srcdir)/xmlrpcpp"
-  fi
 
   if test "x$ac_cv_libmbedtls" = "xyes"; then
     FLDIGI_BUILD_LDADD="$FLDIGI_BUILD_LDADD $LIBMBEDTLS_LDFLAGS"
-  fi
-
-  if test "x$target_darwin" = "xyes"; then
-    FLARQ_BUILD_CXXFLAGS="$FLARQ_BUILD_CXXFLAGS -fno-stack-check -mmacosx-version-min=10.11"
-    FLARQ_BUILD_CPPFLAGS="$FLARQ_BUILD_CPPFLAGS -fno-stack-check -mmacosx-version-min=10.11"
   fi
 
 # UDEV SUPPORT
@@ -98,25 +75,11 @@ $BFD_CFLAGS -pipe -Wall -fexceptions $OPT_CFLAGS $DEBUG_CFLAGS"
     fi
   fi
 
-# LDFLAGS
-  FLARQ_BUILD_LDFLAGS="$MAC_UNIVERSAL_LDFLAGS"
-  if test "x$target_mingw32" = "xyes"; then
-      FLARQ_BUILD_LDFLAGS="-mthreads $FLARQ_BUILD_LDFLAGS"
-  fi
-# LDADD
-  FLARQ_BUILD_LDADD="$FLTK_LIBS $X_LIBS $INTL_LIBS $PTW32_LIBS $BFD_LIBS $EXTRA_LIBS $FLXMLRPC_LIBS"
-  if test "x$target_mingw32" = "xyes"; then
-      FLARQ_BUILD_LDADD="-lwinmm $FLARQ_BUILD_LDADD"
-  fi
-
   if test "x$ac_cv_debug" = "xyes"; then
       FLDIGI_BUILD_CXXFLAGS="$FLDIGI_BUILD_CXXFLAGS -UNDEBUG"
       FLDIGI_BUILD_LDFLAGS="$FLDIGI_BUILD_LDFLAGS $RDYNAMIC"
-      FLARQ_BUILD_CXXFLAGS="$FLARQ_BUILD_CXXFLAGS -UNDEBUG"
-      FLARQ_BUILD_LDFLAGS="$FLARQ_BUILD_LDFLAGS $RDYNAMIC"
   else
       FLDIGI_BUILD_CXXFLAGS="$FLDIGI_BUILD_CXXFLAGS -DNDEBUG"
-      FLARQ_BUILD_CXXFLAGS="$FLARQ_BUILD_CXXFLAGS -DNDEBUG"
   fi
 
   AC_SUBST([FLDIGI_BUILD_CPPFLAGS])
@@ -124,11 +87,6 @@ $BFD_CFLAGS -pipe -Wall -fexceptions $OPT_CFLAGS $DEBUG_CFLAGS"
   AC_SUBST([FLDIGI_BUILD_CFLAGS])
   AC_SUBST([FLDIGI_BUILD_LDFLAGS])
   AC_SUBST([FLDIGI_BUILD_LDADD])
-
-  AC_SUBST([FLARQ_BUILD_CPPFLAGS])
-  AC_SUBST([FLARQ_BUILD_CXXFLAGS])
-  AC_SUBST([FLARQ_BUILD_LDFLAGS])
-  AC_SUBST([FLARQ_BUILD_LDADD])
 
 #define build variables for config.h
   AC_DEFINE_UNQUOTED([BUILD_BUILD_PLATFORM], ["$build"], [Build platform])
@@ -165,11 +123,6 @@ $BFD_CFLAGS -pipe -Wall -fexceptions $OPT_CFLAGS $DEBUG_CFLAGS"
   AC_DEFINE_UNQUOTED([FLDIGI_BUILD_CFLAGS], [$ac_sh_dq], [Fldigi cc compiler flags])
   AC_FLDIGI_SH_DQ([echo $FLDIGI_BUILD_LDFLAGS $FLDIGI_BUILD_LDADD])
   AC_DEFINE_UNQUOTED([FLDIGI_BUILD_LDFLAGS], [$ac_sh_dq], [Fldigi linker flags])
-
-  AC_FLDIGI_SH_DQ([echo $FLARQ_BUILD_CPPFLAGS $FLARQ_BUILD_CXXFLAGS])
-  AC_DEFINE_UNQUOTED([FLARQ_BUILD_CXXFLAGS], [$ac_sh_dq], [Flarq compiler flags])
-  AC_FLDIGI_SH_DQ([echo $FLARQ_BUILD_LDFLAGS $FLARQ_BUILD_LDADD])
-  AC_DEFINE_UNQUOTED([FLARQ_BUILD_LDFLAGS], [$ac_sh_dq], [Flarq linker flags])
 
   if test "x$LC_ALL_saved" != "x"; then
       LC_ALL="$LC_ALL_saved"

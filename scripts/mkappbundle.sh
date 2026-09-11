@@ -3,7 +3,6 @@
 ### Script to create the .app structure for osx
 ### 20080227  Stelios Bounanos M0GLD
 ### Updated 20080727: enable the .icns support
-### Updated 20090525: add flarq
 ### Updated 20180201: deleted dmg sans dylibs
 
 upcase1()
@@ -90,8 +89,7 @@ fi
 
 plist="${data}/mac/Info.plist.in"
 fldigi_icon="${data}/mac/fldigi.icns"
-flarq_icon="${data}/mac/flarq.icns"
-for f in "$plist" "$fldigi_icon" "$flarq_icon"; do
+for f in "$plist" "$fldigi_icon"; do
 	test -r "$f" && continue
 	echo "E: ${f}: not readable" >&2
 	exit 1

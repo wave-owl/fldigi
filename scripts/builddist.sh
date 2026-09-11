@@ -27,7 +27,6 @@ make clean
 make
 
 $PREFIX/bin/i686-w64-mingw32.static-strip src/fldigi.exe
-$PREFIX/bin/i686-w64-mingw32.static-strip src/flarq.exe
 
 make nsisinst
 
