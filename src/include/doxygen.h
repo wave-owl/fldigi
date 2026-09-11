@@ -35,16 +35,10 @@
  \section intro Introduction
 
   Welcome to the Fldigi Interactive Doxygen Sourcecode Documentation!
-  Here you'll find information useful for developing and debugging fldigi and flarq. 
-  
+  Here you'll find information useful for developing and debugging fldigi.
+
   fldigi - Digital modem program for Linux, Free-BSD, OS X / MacOS, Windows 2000 and newer
   
-  flarq - Automatic Repeat reQuest program.
-
-  Fldigi and Flarq are separate programs that are packaged together as source, binary, and installation files.
-
-
-
   <BR>
   \section download To Download Fldigi :
   <UL> 

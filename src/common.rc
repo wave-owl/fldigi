@@ -1,5 +1,5 @@
 /*
- * This file is included by fldigirc.rc and flarqrc.rc, which must both define
+ * This file is included by fldigirc.rc, which must define
  * RC_FILE_VERSION_QUAD and RC_FILE_DESCRIPTION and include config.h.
  */
 

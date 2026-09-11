@@ -10,13 +10,11 @@ created using mingw32.
 <br>
 
 Installing fldigi on windows is very simple.  Simply execute the
-installer program and both fldigi and flarq will be installed in the
-default programs directory structure for the specific Microsoft version
-that is being targeted.  Desktop icons and desktop menu items will
-be created.  An uninstaller link will be created on the desktop
-menu.
+installer program and fldigi will be installed in the default programs
+directory structure for the specific Microsoft version that is being
+targeted.  A desktop icon and desktop menu item will be created.  An
+uninstaller link will be created on the desktop menu.
 <br>
-
 
 Click on the desktop icon to start the application.  If this is a
 new installation you will be guided through the inital configuration

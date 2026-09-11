@@ -7,7 +7,7 @@ used for auto-generating interactive HTML DOXYGEN source-code documentation.
 Unless disabled, the tool CPPcheck is also ran.
 
 This documentation can be extremely useful for 
-both learning and debugging fldigi/flarq.
+both learning and debugging fldigi.
 
 
 == Preparation ==

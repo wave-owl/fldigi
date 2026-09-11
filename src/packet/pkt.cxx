@@ -2206,10 +2206,6 @@ void pkt::send_char(unsigned char c)
 
 string upcase(string s)
 {
-	// this function is also defined in arq::upcase
-	// how to make a fldigi::upcase and use it here and in flarq?
-	// maybe add it to misc/strutil.cxx ?
-
 	for (size_t i = 0; i < s.length(); i++)
 	s[i] = toupper(s[i]);
 	return s;
