@@ -25,7 +25,23 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
+/*
+ * Maintenance note:
+ *
+ * This is the legacy GNU regex implementation, version 0.12.  The
+ * original code assumed that pointers and unsigned integers were the
+ * same size in several failure-stack operations.  The failure stack
+ * now uses uintptr_t so that it can safely hold either integer values
+ * or converted pointer values on 32- and 64-bit systems.
+ *
+ * EXTEND_BUFFER saves offsets into the compiled-pattern buffer before
+ * calling realloc() and reconstructs the pointers afterward.  Do not
+ * move the pointer-difference calculations past realloc(), since the
+ * original buffer may no longer be valid after that call.
+ */
+
 /* AIX requires this to be the first thing in the file. */
+
 #if defined (_AIX) && !defined (REGEX_MALLOC)
   #pragma alloca
 #endif
@@ -49,6 +65,8 @@
 #endif
 
 #include <stdlib.h>
+#include <stdint.h>
+#include <stddef.h>
 #include "regex.h"
 
 /* Define the syntax stuff for \<, \>, etc.  */
@@ -900,31 +918,37 @@ static reg_errcode_t compile_range (const char **p_ptr, const char *pend, char *
    reset the pointers that pointed into the old block to point to the
    correct places in the new one.  If extending the buffer results in it
    being larger than MAX_BUF_SIZE, then flag memory exhausted.  */
-#define EXTEND_BUFFER()							\
-  do { 									\
-    unsigned char *old_buffer = bufp->buffer;				\
-    if (bufp->allocated == MAX_BUF_SIZE) 				\
-      return REG_ESIZE;							\
-    bufp->allocated <<= 1;						\
-    if (bufp->allocated > MAX_BUF_SIZE)					\
-      bufp->allocated = MAX_BUF_SIZE; 					\
-    bufp->buffer = (unsigned char *) realloc (bufp->buffer, bufp->allocated);\
-    if (bufp->buffer == NULL)						\
-      return REG_ESPACE;						\
-    /* If the buffer moved, move all the pointers into it.  */		\
-    if (old_buffer != bufp->buffer)					\
-      {									\
-	b = (b - old_buffer) + bufp->buffer;				\
-	begalt = (begalt - old_buffer) + bufp->buffer;			\
-	if (fixup_alt_jump)						\
-	  fixup_alt_jump = (fixup_alt_jump - old_buffer) + bufp->buffer;\
-	if (laststart)							\
-	  laststart = (laststart - old_buffer) + bufp->buffer;		\
-	if (pending_exact)						\
-	  pending_exact = (pending_exact - old_buffer) + bufp->buffer;	\
-      }									\
+#define EXTEND_BUFFER()                                                 \
+  do {                                                                  \
+    ptrdiff_t b_offset = b - bufp->buffer;                              \
+    ptrdiff_t begalt_offset = begalt - bufp->buffer;                    \
+    ptrdiff_t fixup_alt_jump_offset =                                   \
+      fixup_alt_jump ? fixup_alt_jump - bufp->buffer : 0;               \
+    ptrdiff_t laststart_offset =                                        \
+      laststart ? laststart - bufp->buffer : 0;                         \
+    ptrdiff_t pending_exact_offset =                                    \
+      pending_exact ? pending_exact - bufp->buffer : 0;                 \
+                                                                         \
+    if (bufp->allocated == MAX_BUF_SIZE)                                \
+      return REG_ESIZE;                                                  \
+    bufp->allocated <<= 1;                                               \
+    if (bufp->allocated > MAX_BUF_SIZE)                                 \
+      bufp->allocated = MAX_BUF_SIZE;                                   \
+                                                                         \
+    bufp->buffer =                                                       \
+      (unsigned char *) realloc (bufp->buffer, bufp->allocated);         \
+    if (bufp->buffer == NULL)                                            \
+      return REG_ESPACE;                                                 \
+                                                                         \
+    b = bufp->buffer + b_offset;                                         \
+    begalt = bufp->buffer + begalt_offset;                               \
+    if (fixup_alt_jump)                                                  \
+      fixup_alt_jump = bufp->buffer + fixup_alt_jump_offset;             \
+    if (laststart)                                                       \
+      laststart = bufp->buffer + laststart_offset;                       \
+    if (pending_exact)                                                   \
+      pending_exact = bufp->buffer + pending_exact_offset;               \
   } while (0)
-
 
 /* Since we have one byte reserved for the register number argument to
    {start,stop}_memory, the maximum number of groups we can report
@@ -2195,7 +2219,7 @@ static reg_errcode_t compile_range (const char **p_ptr, const char *pend, char *
    change it ourselves.  */
 int re_max_failures = 2000;
 
-typedef const unsigned char *fail_stack_elt_t;
+typedef uintptr_t fail_stack_elt_t;
 
 typedef struct
 {
@@ -2250,18 +2274,20 @@ typedef struct
 
    Return 1 if was able to do so and 0 if ran out of memory allocating
    space to do so.  */
-#define PUSH_PATTERN_OP(pattern_op, fail_stack)				\
-  ((FAIL_STACK_FULL ()							\
-    && !DOUBLE_FAIL_STACK (fail_stack))					\
-    ? 0									\
-    : ((fail_stack).stack[(fail_stack).avail++] = pattern_op,		\
+#define PUSH_PATTERN_OP(pattern_op, fail_stack)                         \
+  ((FAIL_STACK_FULL ()                                                  \
+    && !DOUBLE_FAIL_STACK (fail_stack))                                 \
+    ? 0                                                                 \
+    : ((fail_stack).stack[(fail_stack).avail++] =                       \
+         (fail_stack_elt_t) (uintptr_t) (pattern_op),                   \
        1))
 
-/* This pushes an item onto the failure stack.  Must be a four-byte
-   value.  Assumes the variable `fail_stack'.  Probably should only
-   be called from within `PUSH_FAILURE_POINT'.  */
-#define PUSH_FAILURE_ITEM(item)						\
-  fail_stack.stack[fail_stack.avail++] = (fail_stack_elt_t) item
+/* This pushes an item onto the failure stack.  Each item is represented
+   by uintptr_t so the stack can safely hold either an integer value or
+   a converted pointer value.  Assumes the variable `fail_stack'.
+   Probably should only be called from within `PUSH_FAILURE_POINT'.  */
+#define PUSH_FAILURE_ITEM(item)                                        \
+  fail_stack.stack[fail_stack.avail++] = (fail_stack_elt_t) (item)
 
 /* The complement operation.  Assumes `fail_stack' is nonempty.  */
 #define POP_FAILURE_ITEM() fail_stack.stack[--fail_stack.avail]
@@ -2415,7 +2441,7 @@ typedef struct
   /* If the saved string location is NULL, it came from an		\
      on_failure_keep_string_jump opcode, and we want to throw away the	\
      saved NULL, thus retaining our current position in the string.  */	\
-  string_temp = POP_FAILURE_ITEM ();					\
+  string_temp = (const unsigned char *) (uintptr_t) POP_FAILURE_ITEM ();	\
   if (string_temp != NULL)						\
     str = (const char *) string_temp;					\
 									\
@@ -2423,7 +2449,7 @@ typedef struct
   DEBUG_PRINT_DOUBLE_STRING (str, string1, size1, string2, size2);	\
   DEBUG_PRINT1 ("'\n");							\
 									\
-  pat = (unsigned char *) POP_FAILURE_ITEM ();				\
+  pat = (unsigned char *) (uintptr_t) POP_FAILURE_ITEM ();		\
   DEBUG_PRINT2 ("  Popping pattern 0x%x: ", pat);			\
   DEBUG_PRINT_COMPILED_PATTERN (bufp, pat, pend);			\
 									\
@@ -2441,10 +2467,10 @@ typedef struct
       reg_info[this_reg].word = POP_FAILURE_ITEM ();			\
       DEBUG_PRINT2 ("      info: 0x%x\n", reg_info[this_reg]);		\
 									\
-      regend[this_reg] = (const char *) POP_FAILURE_ITEM ();		\
+      regend[this_reg] = (const char *) (uintptr_t) POP_FAILURE_ITEM ();		\
       DEBUG_PRINT2 ("      end: 0x%x\n", regend[this_reg]);		\
 									\
-      regstart[this_reg] = (const char *) POP_FAILURE_ITEM ();		\
+      regstart[this_reg] = (const char *) (uintptr_t) POP_FAILURE_ITEM ();		\
       DEBUG_PRINT2 ("      start: 0x%x\n", regstart[this_reg]);		\
     }									\
 									\
@@ -2496,17 +2522,14 @@ int re_compile_fastmap (struct re_pattern_buffer *bufp)
   bufp->fastmap_accurate = 1;	    /* It will be when we're done.  */
   bufp->can_be_null = 0;
 
-  while (p != pend || !FAIL_STACK_EMPTY ())
-    {
-      if (p == pend)
-	{
-	  bufp->can_be_null |= path_can_be_null;
+  while (p != pend || !FAIL_STACK_EMPTY ()) {
+    if (p == pend) {
+      bufp->can_be_null |= path_can_be_null;
 
-	  /* Reset for next path.  */
-	  path_can_be_null = true;
-
-	  p = fail_stack.stack[--fail_stack.avail];
-	}
+       /* Reset for next path.  */
+      path_can_be_null = true;
+      p = (const unsigned char *) (uintptr_t) fail_stack.stack[--fail_stack.avail];
+  }
 
       /* We should never be about to go beyond the end of the pattern.  */
       assert (p < pend);
@@ -2653,7 +2676,8 @@ int re_compile_fastmap (struct re_pattern_buffer *bufp)
 
 	  /* If what's on the stack is where we are now, pop it.  */
 	  if (!FAIL_STACK_EMPTY ()
-	      && fail_stack.stack[fail_stack.avail - 1] == p)
+        && fail_stack.stack[fail_stack.avail - 1]
+          == (fail_stack_elt_t) (uintptr_t) p)
 	    fail_stack.avail--;
 
 	  continue;

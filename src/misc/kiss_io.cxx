@@ -30,6 +30,7 @@
 #include <ctime>
 #include <errno.h>
 #include <float.h>
+#include <inttypes.h>
 
 #include <sys/types.h>
 #if !defined(__MINGW32__) && !defined(__APPLE__)
@@ -812,7 +813,9 @@ static void set_busy_channel_inhibit(char *arg)
 	package.assign(cmd);
 
 	memset(buff, 0, sizeof(buff));
-	snprintf(buff, sizeof(buff)-1, "%lu", temp_disable_tx_duration);
+
+	snprintf(buff, sizeof(buff)-1, "%" PRIdMAX, (intmax_t)temp_disable_tx_duration);
+
 	package.append(buff);
 
 	kiss_queue_frame(encap_kiss_frame(package, KISS_HARDWARE, kiss_port_no), cmd);

@@ -41,6 +41,7 @@
 #include <exception>
 #include <cstdlib>
 #include <signal.h>
+#include <inttypes.h>
 
 #include "threads.h"
 
@@ -3401,13 +3402,9 @@ public:
 	void execute(const xmlrpc_c::paramList& params, xmlrpc_c::value* retval)
 	{
 		std::string adif_str = all_adif_records();
-#ifdef __WIN32__
-		LOG_INFO("[%s] logbook.all_adif_records export size %u",
-#else
-		LOG_INFO("[%s] logbook.all_adif_records export size %lu",
-#endif
+		LOG_INFO("[%s] logbook.all_adif_records export size %" PRIuMAX,
 			XmlRpc::client_id.c_str(),
-			adif_str.length());
+			(uintmax_t)adif_str.length());
 		*retval = xmlrpc_c::value_string(adif_str);
 	}
 };
