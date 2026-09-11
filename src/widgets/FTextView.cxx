@@ -812,7 +812,6 @@ int FTextEdit::handle_dnd_drop(void)
 		}
 #endif
 
-#ifndef BUILD_FLARQ
 	if ((text.find(".jpg") != std::string::npos) ||
 		(text.find(".JPG") != std::string::npos) ||
 		(text.find(".jpeg") != std::string::npos) ||
@@ -834,7 +833,6 @@ int FTextEdit::handle_dnd_drop(void)
 		TxQueINSERTIMAGE(text);
 		return 1;
 	}
-#endif
 
 // paste everything verbatim if we cannot read the first file
 		LOG_INFO("DnD file %s", text.c_str());

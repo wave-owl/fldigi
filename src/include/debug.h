@@ -41,13 +41,7 @@ public:
 		QUIET_LEVEL, ERROR_LEVEL, WARN_LEVEL, INFO_LEVEL,
 		VERBOSE_LEVEL, DEBUG_LEVEL, LOG_NLEVELS
 	};
-#ifdef FLARQ_DEBUG
-	enum source_e {
-		LOG_ARQCONTROL = 1 << 0,
-		LOG_RPC_SERVER = 1 << 1,
-		LOG_OTHER = 1 << 2
-	};
-#else
+
 	enum source_e {
 		LOG_ARQCONTROL = 1 << 0,
 		LOG_AUDIO = 1 << 1,
@@ -65,7 +59,7 @@ public:
 		LOG_N3FJP = 1 << 13,
 		LOG_OTHER = 1 << 14
 	};
-#endif
+
 	static void start(const char* filename);
 	static void stop(void);
 	static void hex_dump(const char * func, const char * data, int len);

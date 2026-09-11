@@ -37,12 +37,8 @@
 
 #include <FL/fl_utf8.h>
 
-#ifdef BUILD_FLDIGI
 #  include "main.h"
 #  include "debug.h"
-#else
-#  include "flarq.h"
-#endif
 
 static volatile sig_atomic_t signum = 0;
 #if !HAVE_DBG_STACK

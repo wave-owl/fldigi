@@ -21,8 +21,6 @@
 #ifndef _status_H
 #define _status_H
 
-#ifndef BUILD_FLARQ
-
 #include <string>
 
 #include "globals.h"
@@ -304,7 +302,5 @@ struct status {
 };
 
 extern status progStatus;
-
-#endif // BUILD_FLARQ
 
 #endif

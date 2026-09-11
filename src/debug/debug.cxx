@@ -58,10 +58,7 @@
 
 #include "threads.h"
 
-#ifndef FLARQ_VERSION
-#	include "status.h"
-#	include "fl_digi.h"
-#endif
+#include "fl_digi.h"
 
 static pthread_mutex_t debug_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t debug_hd_mutex = PTHREAD_MUTEX_INITIALIZER;

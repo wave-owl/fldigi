@@ -58,11 +58,7 @@
 
 #include "debug.h"
 
-#ifdef BUILD_FLARQ
-#	include "flarq.h"
-#else
-#	include "main.h"
-#endif
+#include "main.h"
 
 #include "socket.h"
 #include "estrings.h"
