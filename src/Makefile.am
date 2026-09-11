@@ -8,9 +8,6 @@ SUBDIRS =
 if WANT_FLDIGI
     bin_PROGRAMS += fldigi
 endif
-if WANT_FLARQ
-    bin_PROGRAMS += flarq
-endif
 
 # The BUILD_* variables are defined in build.m4
 fldigi_CPPFLAGS = -DBUILD_FLDIGI -DLOCALEDIR=\"$(localedir)\" @FLDIGI_BUILD_CPPFLAGS@ -DPKGDATADIR=\"$(pkgdatadir)\"
@@ -18,12 +15,6 @@ fldigi_CXXFLAGS = @FLDIGI_BUILD_CXXFLAGS@
 fldigi_CFLAGS = @FLDIGI_BUILD_CFLAGS@
 fldigi_LDFLAGS = @FLDIGI_BUILD_LDFLAGS@
 fldigi_LDADD = @FLDIGI_BUILD_LDADD@
-
-flarq_CPPFLAGS = -DBUILD_FLARQ -DLOCALEDIR=\"$(localedir)\" @FLARQ_BUILD_CPPFLAGS@
-flarq_CXXFLAGS = @FLARQ_BUILD_CXXFLAGS@
-flarq_CFLAGS = $(fldigi_CFLAGS)
-flarq_LDFLAGS = @FLARQ_BUILD_LDFLAGS@
-flarq_LDADD = @FLARQ_BUILD_LDADD@
 
 if WIN32
 fldigi_CPPFLAGS += -fno-var-tracking
@@ -41,8 +32,6 @@ include/xmlrpc.h \
 network/xmlrpc.cxx
 
 FLDIGI_WIN32_RES_SRC = fldigirc.rc
-
-FLARQ_WIN32_RES_SRC = flarq-src/flarqrc.rc
 
 COMMON_WIN32_RES_SRC = common.rc
 
@@ -249,25 +238,17 @@ EXTRA_fldigi_SOURCES = \
 	$(COMMON_WIN32_RES_SRC) $(BENCHMARK_SRC) $(REGEX_SRC) $(STACK_SRC) \
 	$(MINGW32_SRC) $(NLS_SRC) $(XMLRPCPP_SRC) $(LIBMBEDTLS_SRC)
 
-EXTRA_flarq_SOURCES = $(FLARQ_WIN32_RES_SRC) $(COMMON_WIN32_RES_SRC) $(XMLRPCPP_SRC)
-
 fldigi_SOURCES =
-flarq_SOURCES =
 
 fldigi_SOURCES += $(XMLRPC_SRC)
 
 if !ENABLE_FLXMLRPC
 fldigi_SOURCES += $(XMLRPCPP_SRC)
-flarq_SOURCES  += $(XMLRPCPP_SRC)
 else
 fldigi_CPPFLAGS += @FLXMLRPC_CFLAGS@
 fldigi_CXXFLAGS += @FLXMLRPC_CFLAGS@
 fldigi_CFLAGS   += @FLXMLRPC_CFLAGS@
 fldigi_LDFLAGS  += @FLXMLRPC_LIBS@
-flarq_CPPFLAGS += @FLXMLRPC_CFLAGS@
-flarq_CXXFLAGS += @FLXMLRPC_CFLAGS@
-flarq_CFLAGS   += @FLXMLRPC_CFLAGS@
-flarq_LDFLAGS  += @FLXMLRPC_LIBS@
 endif
 
 if !ENABLE_LIBMBEDTLS
@@ -292,22 +273,18 @@ endif
 
 if COMPAT_REGEX
   fldigi_SOURCES += $(REGEX_SRC)
-  flarq_SOURCES += $(REGEX_SRC)
 endif
 
 if COMPAT_STACK
   fldigi_SOURCES += $(STACK_SRC)
-  flarq_SOURCES += $(STACK_SRC)
 endif
 
 if MINGW32
   fldigi_SOURCES += $(MINGW32_SRC)
-  flarq_SOURCES += $(MINGW32_SRC)
 endif
 
 if USE_NLS
   fldigi_SOURCES += $(NLS_SRC)
-  flarq_SOURCES += $(NLS_SRC)
 endif
 
 ########################################################################
@@ -340,7 +317,6 @@ if HAVE_WINDRES
 .rc.o:
 	$(call silent,WRES  ,$@)$(WINDRES) -DRC_BUILD_TIME=\\\"$(shell date +%s)\\\" -I$(srcdir) -I$(srcdir)/include -I$(srcdir)/../data/win32 $< -O coff $@
 fldigi_SOURCES += $(FLDIGI_WIN32_RES_SRC)
-flarq_SOURCES += $(FLARQ_WIN32_RES_SRC)
 endif
 endif
 
@@ -389,26 +365,12 @@ if WANT_FLDIGI
 	    $(INSTALL_DATA) $(srcdir)/../kml/styles.kml $(DESTDIR)/$(pkgdatadir)/kml; \
 	fi
 endif
-if WANT_FLARQ
-	if test -f $(srcdir)/../data/flarq.xpm; then \
-	    $(mkinstalldirs) $(DESTDIR)/$(datadir)/pixmaps; \
-	    $(INSTALL_DATA) $(srcdir)/../data/flarq.xpm $(DESTDIR)/$(datadir)/pixmaps; \
-	fi
-	if test -f $(srcdir)/../data/flarq.desktop; then \
-	    $(mkinstalldirs) $(DESTDIR)/$(datadir)/applications; \
-	    $(INSTALL_DATA) $(srcdir)/../data/flarq.desktop $(DESTDIR)/$(datadir)/applications; \
-	fi
-endif
 
 uninstall-local:
 if WANT_FLDIGI
 	rm -f $(DESTDIR)/$(datadir)/pixmaps/fldigi.xpm
 	rm -f $(DESTDIR)/$(datadir)/applications/fldigi.desktop
 	rm -fr $(DESTDIR)/$(datadir)/fldigi
-endif
-if WANT_FLARQ
-	rm -f $(DESTDIR)/$(datadir)/pixmaps/flarq.xpm
-	rm -f $(DESTDIR)/$(datadir)/applications/flarq.desktop
 endif
 
 FLDIGI_FL_SRC = \
@@ -422,22 +384,14 @@ FLDIGI_FL_SRC = \
 		logbook/lgbook.fl \
 		logbook/fd_view.fl \
 		dxcluster/dx_dialog.fl
-FLARQ_FL_SRC = flarq-src/arqdialogs.fl
 
 if HAVE_FLUID
-flgen: $(FLDIGI_FL_SRC) $(FLARQ_FL_SRC)
+flgen: $(FLDIGI_FL_SRC)
 if WANT_FLDIGI
 	$(call silent,FLUID ,$(FLDIGI_FL_SRC))(cd $(srcdir)/include; \
 	for f in $(FLDIGI_FL_SRC); do \
 	    c=$${f%.fl}.cxx; h=$${f%.fl}.h; h=$${h##*/}; \
 	    $(FLUID) -c -o ../$$c -h $$h ../$$f; \
-	done)
-endif
-if WANT_FLARQ
-	$(call silent,FLUID ,$(FLARQ_FL_SRC))(cd $(srcdir)/flarq-src/include; \
-	for f in $(FLARQ_FL_SRC); do \
-	    c=$${f%.fl}.cxx; h=$${f%.fl}.h; h=$${h##*/}; \
-	    $(FLUID) -c -o ../../$$c -h $$h ../../$$f; \
 	done)
 endif
 endif
@@ -448,14 +402,6 @@ if WANT_FLDIGI
     INSTALLER_FILE = $(PACKAGE_TARNAME)-$(PACKAGE_VERSION)_setup.exe
     APPBUNDLE=$(PACKAGE_TARNAME)-$(PACKAGE_VERSION)
     APPBUNDLE_NOLIBS=$(APPBUNDLE)-nolibs
-endif
-if WANT_FLARQ
-    WANT_FLARQ = yes
-if !WANT_FLDIGI
-        INSTALLER_FILE = flarq-$(FLARQ_VERSION)_setup.exe
-        APPBUNDLE=flarq-$(FLARQ_VERSION)
-        APPBUNDLE_NOLIBS=$(APPBUNDLE)-nolibs
-endif
 endif
 
 if DARWIN
@@ -1013,57 +959,6 @@ EXTRA_fldigi_SOURCES += \
 	libtiniconv/encdec/utf8.h \
 	libtiniconv/encdec/vietcomb.h
 
-flarq_SOURCES += \
-	dialogs/font_browser.cxx \
-	flarq-src/arq.cxx \
-	flarq-src/arqdialogs.cxx \
-	flarq-src/arqhelp.cxx \
-	flarq-src/b64.cxx \
-	flarq-src/flarq.cxx \
-	flarq-src/flarqenv.cxx \
-	flarq-src/xml_server.cxx \
-	flarq-src/include/arq.h \
-	flarq-src/include/arqdialogs.h \
-	flarq-src/include/b64.h \
-	flarq-src/include/flarq.h \
-	flarq-src/include/flarqenv.h \
-	flarq-src/include/xml_server.h \
-	include/F_Edit.h \
-	include/fileselect.h \
-	include/flinput2.h \
-	include/flmisc.h \
-	include/flslider2.h \
-	include/font_browser.h \
-	include/icons.h \
-	include/pixmaps.h \
-	include/re.h \
-	include/socket.h \
-	include/stacktrace.h \
-	include/threads.h \
-	include/table.h \
-	include/util.h \
-	combo/combo.cxx \
-	fileselector/fileselect.cxx \
-	logbook/table.cxx \
-	misc/ascii.cxx \
-	misc/stacktrace.cxx \
-	misc/threads.cxx \
-	misc/timeops.cxx \
-	network/socket.cxx \
-	widgets/flinput2.cxx \
-	widgets/flmisc.cxx \
-	widgets/flslider2.cxx \
-	misc/icons.cxx \
-	misc/pixmaps.cxx \
-	misc/pixmaps_tango.cxx \
-	misc/re.cxx \
-	misc/util.cxx \
-	widgets/Fl_Text_Buffer_mod.cxx \
-	widgets/Fl_Text_Display_mod.cxx \
-	widgets/Fl_Text_Editor_mod.cxx \
-	widgets/FTextView.cxx \
-	widgets/F_Edit.cxx
-
 # Additional files that we distribute
 EXTRA_DIST = \
     $(srcdir)/../build-aux/config.rpath \
@@ -1096,5 +991,4 @@ EXTRA_DIST = \
 	$(srcdir)/synop-src/synop_tool.cxx \
 	$(srcdir)/synop-src/README \
 	$(srcdir)/synop-src/Makefile \
-	$(FLDIGI_FL_SRC) \
-	$(FLARQ_FL_SRC)
+	$(FLDIGI_FL_SRC)

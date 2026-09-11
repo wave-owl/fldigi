@@ -9,6 +9,4 @@ AC_DEFUN([AC_FLDIGI_PROGRAMS], [
 
   AM_CONDITIONAL([WANT_FLDIGI], [test "x$ac_cv_want_fldigi" = "xyes"])
 
-  ac_cv_want_flarq=no
-  AM_CONDITIONAL([WANT_FLARQ], [test "x$ac_cv_want_flarq" = "xyes"])
 ])

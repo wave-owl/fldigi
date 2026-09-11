@@ -132,10 +132,8 @@ AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.21])
 AM_CONDITIONAL([USE_NLS], [test "x$USE_NLS" = "xyes"])
 
-### Programs
 # Determine whether fldigi has been requested.
-# Flarq is permanently disabled pending removal from this source tree.
-# Set WANT_FLDIGI and WANT_FLARQ Makefile conditionals.
+# Set WANT_FLDIGI Makefile conditional.
 AC_FLDIGI_PROGRAMS
 
 ###### OS support
@@ -357,7 +355,6 @@ Configuration summary:
   Debugging ................... $ac_cv_debug
 
   fldigi ...................... $ac_cv_want_fldigi
-  flarq ....................... $ac_cv_want_flarq
 
   i18n ........................ $USE_NLS
 ])

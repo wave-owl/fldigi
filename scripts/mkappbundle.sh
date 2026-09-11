@@ -112,18 +112,6 @@ if test "x$WANT_FLDIGI" = "xyes"; then
 	bundle
 fi
 
-if test "x$WANT_FLARQ" = "xyes"; then
-	identifier="com.w1hkj.flarq"
-	name="Flarq"
-	signature="flrq"
-	binary="flarq"
-	icon="$flarq_icon"
-	version="${FLARQ_VERSION_MAJOR}.${FLARQ_VERSION_MINOR}${FLARQ_VERSION_PATCH}"
-	appversion="$FLARQ_VERSION"
-
-	bundle
-fi
-
 cd "$build"
 
 echo "creating disk image"

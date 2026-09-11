@@ -8,22 +8,14 @@
 # Variables
 !define FLDIGI_DESCRIPTION "${FLDIGI_NAME} ${FLDIGI_VERSION}"
 !define FLDIGI_STRING "${FLDIGI_NAME}-${FLDIGI_VERSION}"
-!define FLARQ_DESCRIPTION "${FLARQ_NAME} ${FLARQ_VERSION}"
-!define FLARQ_STRING "${FLARQ_NAME}-${FLARQ_VERSION}"
 !ifdef HAVE_FLDIGI
     !define PRODUCT_BINARY "${FLDIGI_BINARY}"
     !define PRODUCT_NAME "${FLDIGI_NAME}"
     !define PRODUCT_VERSION "${FLDIGI_VERSION}"
     !define PRODUCT_STRING "${FLDIGI_STRING}"
     !define PRODUCT_DESCRIPTION "${FLDIGI_DESCRIPTION}"
-!else ifdef HAVE_FLARQ
-    !define PRODUCT_BINARY "${FLARQ_BINARY}"
-    !define PRODUCT_NAME "${FLARQ_NAME}"
-    !define PRODUCT_VERSION "${FLARQ_VERSION}"
-    !define PRODUCT_STRING "${FLARQ_STRING}"
-    !define PRODUCT_DESCRIPTION "${FLARQ_DESCRIPTION}"
 !else
-    !error "Either HAVE_FLDIGI or HAVE_FLARQ must be defined"
+    !error "HAVE_FLDIGI must be defined"
 !endif
 
 # unicode options
@@ -118,9 +110,6 @@ SectionEnd
 !ifdef HAVE_FLDIGI
     Var WANT_FLDIGI
 !endif
-!ifdef HAVE_FLARQ
-    Var WANT_FLARQ
-!endif
 
 # This section is present (and required) if the installer contains fldigi.
 !ifdef HAVE_FLDIGI
@@ -134,19 +123,6 @@ SectionEnd
         File /r "${FLDIGI_LOCALE_PATH}/${FLDIGI_LOCALE_DIR}\*.mo"
         !endif
         StrCpy $WANT_FLDIGI "true"
-    SectionEnd
-!endif
-
-# This section is present if the installer contains flarq.  It is optional if
-# the installer also contains fldigi.
-!ifdef HAVE_FLARQ
-    Section "Flarq"
-        !ifndef HAVE_FLDIGI
-            SectionIn RO
-        !endif
-        SetOutPath $INSTDIR
-        File "${FLARQ_BINARY}"
-        StrCpy $WANT_FLARQ "true"
     SectionEnd
 !endif
 
@@ -164,12 +140,6 @@ Section "Start Menu Shortcuts"
             CreateShortCut "${SM_PATH}\${FLDIGI_NAME} Documentation.lnk" "${FLDIGI_DOCS_URL}"
         ${EndIf}
     !endif
-    !ifdef HAVE_FLARQ
-        ${If} $WANT_FLARQ == 'true'
-            CreateShortCut "${SM_PATH}\${FLARQ_NAME}.lnk" "$INSTDIR\${FLARQ_BINARY}" "" "$INSTDIR\${FLARQ_BINARY}" 0
-            CreateShortCut "${SM_PATH}\${FLARQ_NAME} Documentation.lnk" "${FLARQ_DOCS_URL}"
-        ${EndIf}
-    !endif
     CreateShortCut "${SM_PATH}\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
 SectionEnd
 
@@ -180,12 +150,6 @@ Section "Desktop Shortcuts"
                            "$INSTDIR\${FLDIGI_BINARY}" 0
         ${EndIf}
     !endif
-    !ifdef HAVE_FLARQ
-        ${If} $WANT_FLARQ == 'true'
-            CreateShortCut "$DESKTOP\${FLARQ_DESCRIPTION}.lnk" "$INSTDIR\${FLARQ_BINARY}" "" \
-                           "$INSTDIR\${FLARQ_BINARY}" 0
-        ${EndIf}
-    !endif
 SectionEnd
 
 # This is unselected by default
@@ -194,12 +158,6 @@ Section /o "Quick Launch Shortcuts"
         ${If} $WANT_FLDIGI == 'true'
             CreateShortCut "$QUICKLAUNCH\${FLDIGI_DESCRIPTION}.lnk" "$INSTDIR\${FLDIGI_BINARY}" "" \
                            "$INSTDIR\${FLDIGI_BINARY}" 0
-        ${EndIf}
-    !endif
-    !ifdef HAVE_FLARQ
-        ${If} $WANT_FLARQ == 'true'
-            CreateShortCut "$QUICKLAUNCH\${FLARQ_DESCRIPTION}.lnk" "$INSTDIR\${FLARQ_BINARY}" "" \
-                           "$INSTDIR\${FLARQ_BINARY}" 0
         ${EndIf}
     !endif
 SectionEnd
@@ -217,9 +175,6 @@ Section "Uninstall"
             RMDir /r /REBOOTOK $INSTDIR\${FLDIGI_LOCALE_DIR}
         !endif
     !endif
-    !ifdef HAVE_FLARQ
-        Delete /REBOOTOK $INSTDIR\${FLARQ_BINARY}
-    !endif
     Delete /REBOOTOK $INSTDIR\uninstall.exe
 
     # Remove shortcuts, if any
@@ -227,10 +182,6 @@ Section "Uninstall"
     !ifdef HAVE_FLDIGI
         Delete "$DESKTOP\${FLDIGI_DESCRIPTION}.lnk"
         Delete "$QUICKLAUNCH\${FLDIGI_DESCRIPTION}.lnk"
-    !endif
-    !ifdef HAVE_FLARQ
-        Delete "$DESKTOP\${FLARQ_DESCRIPTION}.lnk"
-        Delete "$QUICKLAUNCH\${FLARQ_DESCRIPTION}.lnk"
     !endif
 
     # Remove directories used

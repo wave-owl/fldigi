@@ -33,22 +33,16 @@ set -e
 
 fldigi_name=Fldigi
 fldigi_bin=fldigi.exe
-flarq_name=Flarq
-flarq_bin=flarq.exe
 
 def=
 
-if test "x$WANT_FLDIGI" != "xyes" && test "x$WANT_FLARQ" != "xyes"; then
+if test "x$WANT_FLDIGI" != "xyes"; then
     echo "E: refusing to create empty installer" >&2
     exit 1
 fi
 if test "x$WANT_FLDIGI" = "xyes"; then
 #    test "x$NOSTRIP" = "x" && $STRIP -S "$fldigi_bin"
     def="$def -DHAVE_FLDIGI -DFLDIGI_NAME=$fldigi_name -DFLDIGI_BINARY=$fldigi_bin -DFLDIGI_VERSION=$PACKAGE_VERSION"
-fi
-if test "x$WANT_FLARQ" = "xyes"; then
-#    test "x$NOSTRIP" = "x" && $STRIP -S "$flarq_bin"
-    def="$def -DHAVE_FLARQ -DFLARQ_NAME=$flarq_name -DFLARQ_BINARY=$flarq_bin -DFLARQ_VERSION=$FLARQ_VERSION"
 fi
 
 if test "x$USE_NLS" = "xyes" && make -C "$srcdir/../po" install prefix="$build" >/dev/null; then
