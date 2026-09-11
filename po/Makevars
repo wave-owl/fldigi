@@ -39,3 +39,5 @@ MSGID_BUGS_ADDRESS = w1hkj AT w1hkj DOT com
 # This is the list of locale categories, beyond LC_MESSAGES, for which the
 # message catalogs shall be used.  It is usually empty.
 EXTRA_LOCALE_CATEGORIES =
+
+DIST_DEPENDS_ON_UPDATE_PO = no
