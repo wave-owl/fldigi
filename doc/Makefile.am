@@ -3,8 +3,8 @@
 
 ASCIIDOC_CONF = asciidoc.conf
 
-ASCIIDOC_SRC = fldigi.1.txt flarq.1.txt guide.txt
-ASCIIDOC_MAN_DIST = fldigi.1 flarq.1
+ASCIIDOC_SRC = fldigi.1.txt guide.txt
+ASCIIDOC_MAN_DIST = fldigi.1
 ASCIIDOC_MAN_INST =
 ASCIIDOC_HTML =
 

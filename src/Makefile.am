@@ -977,10 +977,6 @@ EXTRA_DIST = \
 	$(srcdir)/../data/mac/fldigi.icns \
 	$(srcdir)/../data/win32/fldigi.ico \
 	$(srcdir)/../data/win32/fldigi.nsi \
-	$(srcdir)/../data/flarq.desktop \
-	$(srcdir)/../data/flarq.xpm \
-	$(srcdir)/../data/mac/flarq.icns \
-	$(srcdir)/../data/win32/flarq.ico \
 	$(srcdir)/mbedtls/libmbedtls.pc \
 	$(srcdir)/mbedtls/LICENSE \
 	$(srcdir)/mbedtls/gpl-2.0.txt \
