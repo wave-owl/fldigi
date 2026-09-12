@@ -96,46 +96,46 @@ void hamlib_get_defaults()
 	rigmodel = hamlib_get_rig_model(cboHamlibRig->index());
 	testrig.init(rigmodel);
 
-	testrig.getConf("timeout", szParam);
+	testrig.getConf("timeout", szParam, sizeof(szParam));
 	sscanf(szParam, "%d", &i);
 	cntHamlibTimeout->value(i);	
 	LOG_VERBOSE("Hamlib default Timeout: %d", i);
 
-	testrig.getConf("retry", szParam);
+	testrig.getConf("retry", szParam, sizeof(szParam));
 	sscanf(szParam, "%d", &i);
 	cntHamlibRetries->value(i);
 	LOG_VERBOSE("Hamlib default Retry: %d", i);
 
-	testrig.getConf("post_write_delay", szParam);
+	testrig.getConf("post_write_delay", szParam, sizeof(szParam));
 	sscanf(szParam, "%d", &i);
 	cntHamlibWait->value(i);
 	LOG_VERBOSE("Hamlib default Post write delay: %d", i);
 
-	testrig.getConf("write_delay", szParam);
+	testrig.getConf("write_delay", szParam, sizeof(szParam));
 	sscanf(szParam, "%d", &i);
 	cntHamlibWriteDelay->value(i);
 	LOG_VERBOSE("Hamlib default Write delay: %d", i);
 
 	if (testrig.getCaps()->port_type == RIG_PORT_SERIAL) {
 
-		testrig.getConf("serial_speed", szParam);
+		testrig.getConf("serial_speed", szParam, sizeof(szParam));
 		listbox_baudrate->value(szParam);
 		LOG_VERBOSE("Hamlib default serial speed: %s", szParam);
 
-		testrig.getConf("rts_state", szParam);
+		testrig.getConf("rts_state", szParam, sizeof(szParam));
 		chkHamlibRTSplus->value( strcmp(szParam, "ON") == 0 ? true : false);
 		LOG_VERBOSE("Hamlib default RTS state: %s", szParam);
 
-		testrig.getConf("dtr_state", szParam);
+		testrig.getConf("dtr_state", szParam, sizeof(szParam));
 		btnHamlibDTRplus->value( strcmp(szParam, "ON") == 0 ? true : false);
 		LOG_VERBOSE("Hamlib default DTR state: %s", szParam);
 
-		testrig.getConf("serial_handshake", szParam);
+		testrig.getConf("serial_handshake", szParam, sizeof(szParam));
 		chkHamlibRTSCTSflow->value(strcmp(szParam, "Hardware") == 0 ? true : false);
 		chkHamlibXONXOFFflow->value(strcmp(szParam, "XONXOFF") == 0 ? true : false);
 		LOG_VERBOSE("Hamlib default serial handshake: %s", szParam);
 
-		testrig.getConf("stop_bits", szParam);
+		testrig.getConf("stop_bits", szParam, sizeof(szParam));
 		valHamRigStopbits->value(strcmp(szParam, "1") == 0 ? 1 : 2);
 		LOG_VERBOSE("Hamlib default stop bits: %s", szParam);
 	}

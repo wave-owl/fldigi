@@ -86,8 +86,8 @@ public:
 
 	void setConf(token_t token, const char *val);
 	void setConf(const char *name, const char *val);
-	void getConf(token_t token, char *val);
-	void getConf(const char *name, char *val);
+	void getConf(token_t token, char *val, int val_len);
+	void getConf(const char *name, char *val, int val_len);
 	const char *getName();
 	const struct rig_caps* getCaps(void);
 

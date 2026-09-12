@@ -219,16 +219,16 @@ void Rig::setConf(const char *name, const char *val)
 		throw RigException(name, err);
 }
 
-void Rig::getConf(token_t token, char *val)
+void Rig::getConf(token_t token, char *val, int val_len)
 {
-	int err = rig_get_conf(rig, token, val);
+	int err = rig_get_conf2(rig, token, val, val_len);
 	if (err != RIG_OK)
 		throw RigException(err);
 }
 
-void Rig::getConf(const char *name, char *val)
+void Rig::getConf(const char *name, char *val, int val_len)
 {
-	int err = rig_get_conf(rig, tokenLookup(name), val);
+	int err = rig_get_conf2(rig, tokenLookup(name), val, val_len);
 	if (err != RIG_OK)
 		throw RigException(name, err);
 }
