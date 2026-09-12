@@ -46,12 +46,9 @@
 
 #include <sys/types.h>
 
-#ifdef __WOE32__
-#  ifdef __CYGWIN__
-#    include <w32api/windows.h>
-#  else
-#    include <windows.h>
-#  endif
+#ifdef __WIN32__
+#  include <winsock2.h>
+#  include <windows.h>
 #endif
 
 #include <cstdlib>
@@ -61,7 +58,7 @@
 #include <algorithm>
 #include <map>
 
-#ifndef __WOE32__
+#ifndef __WIN32__
 #include <sys/wait.h>
 #endif
 
