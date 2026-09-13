@@ -1,0 +1,147 @@
+#ifndef CONFIG_H_
+#define CONFIG_H_
+
+#define BUILD_BUILD_PLATFORM "@BUILD_BUILD_PLATFORM@"
+#define BUILD_COMPILER "@BUILD_COMPILER@"
+#define BUILD_CONFIGURE_ARGS "@BUILD_CONFIGURE_ARGS@"
+#define BUILD_DATE "@BUILD_DATE@"
+#define BUILD_HOST "@BUILD_HOST@"
+#define BUILD_HOST_PLATFORM "@BUILD_HOST_PLATFORM@"
+#define BUILD_TARGET_PLATFORM "@BUILD_TARGET_PLATFORM@"
+#define BUILD_USER "@BUILD_USER@"
+
+#define FLDIGI_BUILD_CXXFLAGS "@FLDIGI_BUILD_CXXFLAGS@"
+#define FLDIGI_BUILD_LDFLAGS "@FLDIGI_BUILD_LDFLAGS@"
+
+#define FLTK_BUILD_VERSION "@FLTK_BUILD_VERSION@"
+#define FLXMLRPC_BUILD_VERSION "@FLXMLRPC_BUILD_VERSION@"
+#define HAMLIB_BUILD_VERSION "@HAMLIB_BUILD_VERSION@"
+#define LIBGPIOD_BUILD_VERSION "@LIBGPIOD_BUILD_VERSION@"
+#define LIBMBEDTLS_BUILD_VERSION "@LIBMBEDTLS_BUILD_VERSION@"
+#define PNG_BUILD_VERSION "@PNG_BUILD_VERSION@"
+#define PORTAUDIO_BUILD_VERSION "@PORTAUDIO_BUILD_VERSION@"
+#define PULSEAUDIO_BUILD_VERSION "@PULSEAUDIO_BUILD_VERSION@"
+#define SAMPLERATE_BUILD_VERSION "@SAMPLERATE_BUILD_VERSION@"
+#define SNDFILE_BUILD_VERSION "@SNDFILE_BUILD_VERSION@"
+
+#define PACKAGE "fldigi"
+#define PACKAGE_BUGREPORT "fldigi-devel@sourceforge.net"
+#define PACKAGE_DL "https://www.w1hkj.org/download.html"
+#define PACKAGE_DOCS "https://www.w1hkj.org/FldigiHelp/index.html"
+#define PACKAGE_GUIDE "https://www.w1hkj.org/beginners.html"
+#define PACKAGE_HOME "https://www.w1hkj.org/Fldigi.html"
+#define PACKAGE_PROJ "http://sourceforge.net/projects/fldigi/files/"
+
+#define PACKAGE_NAME "fldigi"
+#define PACKAGE_TARNAME "fldigi"
+#define PACKAGE_NEWBUG ""
+#define PACKAGE_STRING "fldigi @FLDIGI_VERSION@"
+#define PACKAGE_VERSION "@FLDIGI_VERSION@"
+
+#define ENABLE_NLS @ENABLE_NLS@
+
+#define FLDIGI_AUTHORS "@FLDIGI_AUTHORS@"
+
+#define VERSION "@FLDIGI_VERSION@"
+#define FLDIGI_VERSION "@FLDIGI_VERSION@"
+#define FLDIGI_VERSION_MAJOR @FLDIGI_VERSION_MAJOR@
+#define FLDIGI_VERSION_MINOR @FLDIGI_VERSION_MINOR@
+#define FLDIGI_VERSION_PATCH "@FLDIGI_VERSION_PATCH@"
+
+#define FLDIGI_FLTK_API_MAJOR @FLDIGI_FLTK_API_MAJOR@
+#define FLDIGI_FLTK_API_MINOR @FLDIGI_FLTK_API_MINOR@
+#define FLDIGI_FLTK_API_PATCH @FLDIGI_FLTK_API_PATCH@
+
+/* Headers */
+#cmakedefine HAVE_ARPA_INET_H 1
+#cmakedefine HAVE_DIRENT_H 1
+#cmakedefine HAVE_EXECINFO_H 1
+#cmakedefine HAVE_FCNTL_H 1
+#cmakedefine HAVE_INTTYPES_H 1
+#cmakedefine HAVE_LIMITS_H 1
+#cmakedefine HAVE_LINUX_PPDEV_H 1
+#cmakedefine HAVE_MEMORY_H 1
+#cmakedefine HAVE_NETDB_H 1
+#cmakedefine HAVE_NETINET_IN_H 1
+#cmakedefine HAVE_REGEX_H 1
+#cmakedefine HAVE_STDBOOL_H 1
+#cmakedefine HAVE_STDINT_H 1
+#cmakedefine HAVE_STDIO_H 1
+#cmakedefine HAVE_STDLIB_H 1
+#cmakedefine HAVE_STRING_H 1
+#cmakedefine HAVE_STRINGS_H 1
+#cmakedefine HAVE_SYS_IOCTL_H 1
+#cmakedefine HAVE_SYS_PARAM_H 1
+#cmakedefine HAVE_SYS_SELECT_H 1
+#cmakedefine HAVE_SYS_SOCKET_H 1
+#cmakedefine HAVE_SYS_STAT_H 1
+#cmakedefine HAVE_SYS_TIME_H 1
+#cmakedefine HAVE_SYS_TYPES_H 1
+#cmakedefine HAVE_SYS_UTSNAME_H 1
+#cmakedefine HAVE_TERMIOS_H 1
+#cmakedefine HAVE_UNISTD_H 1
+#cmakedefine HAVE_VALUES_H 1
+#cmakedefine HAVE_WCHAR_H 1
+
+/* Functions */
+#cmakedefine HAVE_CLOCK_GETTIME 1
+#cmakedefine HAVE_DCGETTEXT 1
+#cmakedefine HAVE_DLOPEN 1
+#cmakedefine HAVE_GETADDRINFO 1
+#cmakedefine HAVE_GETHOSTBYNAME 1
+#cmakedefine HAVE_GETTEXT 1
+#cmakedefine HAVE_GMTIME_R 1
+#cmakedefine HAVE_HSTRERROR 1
+#cmakedefine HAVE_LOCALTIME_R 1
+#cmakedefine HAVE_MEMMOVE 1
+#cmakedefine HAVE_MEMSET 1
+#cmakedefine HAVE_MKDIR 1
+#cmakedefine HAVE_SELECT 1
+#cmakedefine HAVE_SEM_TIMEDWAIT 1
+#cmakedefine HAVE_SEM_UNLINK 1
+#cmakedefine HAVE_SETENV 1
+#cmakedefine HAVE_SNPRINTF 1
+#cmakedefine HAVE_SOCKET 1
+#cmakedefine HAVE_SOCKETPAIR 1
+#cmakedefine HAVE_STRCASECMP 1
+#cmakedefine HAVE_STRCASESTR 1
+#cmakedefine HAVE_STRCHR 1
+#cmakedefine HAVE_STRDUP 1
+#cmakedefine HAVE_STRERROR 1
+#cmakedefine HAVE_STRFTIME 1
+#cmakedefine HAVE_STRLCPY 1
+#cmakedefine HAVE_STRNCASECMP 1
+#cmakedefine HAVE_STRNCMP 1
+#cmakedefine HAVE_STRNCPY 1
+#cmakedefine HAVE_STRNLEN 1
+#cmakedefine HAVE_STRRCHR 1
+#cmakedefine HAVE_STRSTR 1
+#cmakedefine HAVE_STRTOL 1
+#cmakedefine HAVE_UNAME 1
+#cmakedefine HAVE_UNSETENV 1
+#cmakedefine HAVE_VSNPRINTF 1
+
+/* Symbols and language capabilities */
+#cmakedefine HAVE_O_CLOEXEC 1
+#cmakedefine HAVE__BOOL 1
+#cmakedefine HAVE_CXX11 1
+#cmakedefine HAVE_STD_BIND 1
+#cmakedefine HAVE_STD_HASH 1
+
+#define USE_FLXMLRPC @USE_FLXMLRPC@
+#define USE_HAMLIB @USE_HAMLIB@
+#define USE_LIBGPIOD @USE_LIBGPIOD@
+#define USE_LIBMBEDTLS @USE_LIBMBEDTLS@
+#define USE_OSS @USE_OSS@
+#define USE_PNG @USE_PNG@
+#define USE_PORTAUDIO @USE_PORTAUDIO@
+#define USE_PULSEAUDIO @USE_PULSEAUDIO@
+#define USE_SAMPLERATE @USE_SAMPLERATE@
+#define USE_SNDFILE @USE_SNDFILE@
+#define USE_TLS @USE_TLS@
+#define USE_X @USE_X@
+
+#include "pkg.h"
+#include "util.h"
+
+#endif /* CONFIG_H_ */
