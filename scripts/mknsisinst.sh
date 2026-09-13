@@ -14,9 +14,16 @@ if [ -z "$PACKAGE_TARNAME" ]; then
 fi
 
 PWD=`pwd`
-data="${PWD}/$1"
-build="${PWD}/$2"
-dist="${PWD}/../dist/bin"
+
+case "$1" in
+    /*) data="$1" ;;
+    *)  data="${PWD}/$1" ;;
+esac
+
+case "$2" in
+    /*) build="$2" ;;
+    *)  build="${PWD}/$2" ;;
+esac
 
 # more sanity checks
 for d in "$data" "$build"; do
@@ -45,11 +52,9 @@ if test "x$WANT_FLDIGI" = "xyes"; then
     def="$def -DHAVE_FLDIGI -DFLDIGI_NAME=$fldigi_name -DFLDIGI_BINARY=$fldigi_bin -DFLDIGI_VERSION=$PACKAGE_VERSION"
 fi
 
-if test "x$USE_NLS" = "xyes" && make -C "$srcdir/../po" install prefix="$build" >/dev/null; then
+if test "x$USE_NLS" = "xyes" && make -C ../po install prefix="$build" >/dev/null; then
     def="$def -DFLDIGI_LOCALE_PATH=$build/share -DFLDIGI_LOCALE_DIR=locale"
 fi
-
-def="$def -DDIST_DEPS=$dist"
 
 $MAKENSIS -V2 -NOCD -D"INSTALLER_FILE=$INSTALLER_FILE" -D"LICENSE_FILE=$data/../COPYING" \
     -D"SUPPORT_URL=$PACKAGE_HOME" -D"UPDATES_URL=$PACKAGE_DL" -D"FLDIGI_DOCS_URL=$PACKAGE_DOCS" \
