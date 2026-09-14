@@ -5,24 +5,34 @@ AC_COPYRIGHT([Copyright (C) 2007, 2008, 2009 Stelios Bounanos, M0GLD (m0gld AT e
 
 AC_PREREQ([2.71])
 
-dnl major and minor must be integers; patch may
-dnl contain other characters or be empty
-m4_define(FLDIGI_MAJOR, [4])
-m4_define(FLDIGI_MINOR, [2])
-m4_define(FLDIGI_PATCH, [.13])
+dnl VERSION is the authoritative fldigi version.
+m4_define([FLDIGI_VERSION_STRING], m4_esyscmd_s([cat VERSION]))
 
-AC_INIT([fldigi],[FLDIGI_MAJOR.FLDIGI_MINOR[]FLDIGI_PATCH],[fldigi-devel@sourceforge.net])
+AC_INIT([fldigi], [FLDIGI_VERSION_STRING],
+        [fldigi-devel@sourceforge.net])
+
+dnl Derive the individual version components.
+dnl FLDIGI_VERSION_PATCH retains the historical leading dot, e.g. ".13".
+FLDIGI_VERSION_MAJOR=`echo "$PACKAGE_VERSION" | sed 's/\..*//'`
+FLDIGI_VERSION_MINOR=`echo "$PACKAGE_VERSION" | sed 's/^[^.]*\.//;s/\..*//'`
+FLDIGI_VERSION_PATCH=`echo "$PACKAGE_VERSION" | sed 's/^[^.]*\.[^.]*//'`
+FLDIGI_VERSION="$PACKAGE_VERSION"
 
 # substitute in Makefiles
-AC_SUBST([FLDIGI_VERSION_MAJOR], [FLDIGI_MAJOR])
-AC_SUBST([FLDIGI_VERSION_MINOR], [FLDIGI_MINOR])
-AC_SUBST([FLDIGI_VERSION_PATCH], [FLDIGI_PATCH])
-AC_SUBST([FLDIGI_VERSION], [FLDIGI_MAJOR.FLDIGI_MINOR[]FLDIGI_PATCH])
+AC_SUBST([FLDIGI_VERSION_MAJOR])
+AC_SUBST([FLDIGI_VERSION_MINOR])
+AC_SUBST([FLDIGI_VERSION_PATCH])
+AC_SUBST([FLDIGI_VERSION])
+
 # define in config.h
-AC_DEFINE([FLDIGI_VERSION_MAJOR], [FLDIGI_MAJOR], [Fldigi major version number])
-AC_DEFINE([FLDIGI_VERSION_MINOR], [FLDIGI_MINOR], [Fldigi minor version number])
-AC_DEFINE([FLDIGI_VERSION_PATCH], ["FLDIGI_PATCH"], [Fldigi patch/alpha version string])
-AC_DEFINE([FLDIGI_VERSION], ["FLDIGI_MAJOR.FLDIGI_MINOR[]FLDIGI_PATCH"], [Fldigi version string])
+AC_DEFINE_UNQUOTED([FLDIGI_VERSION_MAJOR], [$FLDIGI_VERSION_MAJOR],
+                   [Fldigi major version number])
+AC_DEFINE_UNQUOTED([FLDIGI_VERSION_MINOR], [$FLDIGI_VERSION_MINOR],
+                   [Fldigi minor version number])
+AC_DEFINE_UNQUOTED([FLDIGI_VERSION_PATCH], ["$FLDIGI_VERSION_PATCH"],
+                   [Fldigi patch/alpha version string])
+AC_DEFINE_UNQUOTED([FLDIGI_VERSION], ["$FLDIGI_VERSION"],
+                   [Fldigi version string])
 
 AC_SUBST([AC_CONFIG_ARGS], [$ac_configure_args])
 

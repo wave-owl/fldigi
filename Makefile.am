@@ -25,4 +25,4 @@ hamlib-static:
 endif
 endif
 
-EXTRA_DIST = build-aux/config.rpath
+EXTRA_DIST = build-aux/config.rpath VERSION
