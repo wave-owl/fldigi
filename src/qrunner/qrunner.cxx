@@ -91,7 +91,7 @@ void qrunner_debug(int tid, const char *name)
 qrunner::qrunner() : attached(false), inprog(false), drop_flag(false)
 {
 	fifo = new fqueue(FIFO_SIZE);
-#ifndef __WOE32__
+#ifndef __WIN32__
 	if (pipe(pfd) == -1)
 #else
 	if (socketpair(PF_INET, SOCK_STREAM, 0, pfd) == -1)
@@ -101,7 +101,7 @@ qrunner::qrunner() : attached(false), inprog(false), drop_flag(false)
 	set_cloexec(pfd[1], 1);
 	if (set_nonblock(pfd[0], 1) == -1)
 		throw qexception(errno);
-#ifdef __WOE32__
+#ifdef __WIN32__
 	set_nodelay(pfd[1], 1);
 #endif
 }

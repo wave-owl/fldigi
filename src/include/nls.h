@@ -27,7 +27,7 @@
 #include <cstring>
 #include <string>
 
-#if ENABLE_NLS && defined(__WOE32__)
+#if ENABLE_NLS && defined(__WIN32__)
 struct lang_def_t {
 	const char* lang;
 	const char* lang_region;

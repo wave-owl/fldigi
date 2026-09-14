@@ -31,7 +31,7 @@
 
 #include "lgbook.h"
 
-#ifdef __WOE32__
+#ifdef __WIN32__
 #  define ADIF_SUFFIX "adi"
 #else
 #  define ADIF_SUFFIX "adif"

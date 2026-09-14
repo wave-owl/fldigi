@@ -195,7 +195,7 @@ deprecated__ typeof(strcat) strcat;
 */
 #endif
 
-#ifdef __WOE32__
+#ifdef __WIN32__
 #  define NOMINMAX 1
 #endif
 

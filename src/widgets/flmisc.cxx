@@ -106,7 +106,7 @@ void adjust_color_inv(unsigned char& bg1r, unsigned char& bg1g, unsigned char& b
 		Fl::get_color((def >= 1 ? def : adj), bg1r, bg1g, bg1b);
 }
 
-#if !defined(__APPLE__) && !defined(__WOE32__) && USE_X
+#if !defined(__APPLE__) && !defined(__WIN32__) && USE_X
 #  include <FL/Fl_Window.H>
 #  include <FL/Fl_Pixmap.H>
 #  include <FL/fl_draw.H>

@@ -41,7 +41,7 @@ Fl_Color adjust_color(Fl_Color fg, Fl_Color bg);
 void adjust_color_inv(unsigned char& bg1r, unsigned char& bg1g, unsigned char& bg1b,
 		      Fl_Color bg2, Fl_Color def);
 
-#if !defined(__APPLE__) && !defined(__WOE32__)
+#if !defined(__APPLE__) && !defined(__WIN32__)
 #  include <FL/x.H>
 void make_pixmap(Pixmap *xpm, const char **data, int argc, char** argv);
 #endif

@@ -46,7 +46,7 @@
 #include <sstream>
 #include <vector>
 
-#ifndef __WOE32__
+#ifndef __WIN32__
 #include <sys/wait.h>
 #endif
 
@@ -817,7 +817,7 @@ Fl_Button			*set_pwr_level = (Fl_Button *)0;
 
 static Fl_Pixmap 		*addrbookpixmap = 0;
 
-#if !defined(__APPLE__) && !defined(__WOE32__) && USE_X
+#if !defined(__APPLE__) && !defined(__WIN32__) && USE_X
 Pixmap				fldigi_icon_pixmap;
 #endif
 
@@ -2718,7 +2718,7 @@ void cb_mnuSaveConfig(Fl_Menu_ *, void *) {
 void cb_mnuVisitURL(Fl_Widget*, void* arg)
 {
 	const char* url = reinterpret_cast<const char *>(arg);
-#ifndef __WOE32__
+#ifndef __WIN32__
 	const char* browsers[] = {
 #  ifdef __APPLE__
 		getenv("FLDIGI_BROWSER"), // valid for any OS - set by user
@@ -2788,7 +2788,7 @@ void cb_mnuBeginnersURL(Fl_Widget*, void*)
 		return;
 	f << szBeginner;
 	f.close();
-#ifndef __WOE32__
+#ifndef __WIN32__
 	cb_mnuVisitURL(NULL, (void *)deffname.insert(0, "file://").c_str());
 #else
 	cb_mnuVisitURL(NULL, (void *)deffname.c_str());
@@ -9094,7 +9094,7 @@ void create_fl_digi_main(int argc, char** argv)
 	else
 		create_fl_digi_main_primary();
 
-#if defined(__WOE32__)
+#if defined(__WIN32__)
 #  ifndef IDI_ICON
 #    define IDI_ICON 101
 #  endif

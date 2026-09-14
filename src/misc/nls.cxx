@@ -38,7 +38,7 @@
 #  define PATH_MAX 4096
 #endif
 
-#ifdef __WOE32__
+#ifdef __WIN32__
 #  include <string>
 #  include <fstream>
 
@@ -124,7 +124,7 @@ int setup_nls(void)
 	char buf[PATH_MAX];
 	if (!(ldir = getenv("FLDIGI_LOCALE_DIR"))) {
 		if (getcwd(buf, sizeof(buf) - strlen("/locale") - 1)) {
-#ifdef __WOE32__
+#ifdef __WIN32__
 			int lang = get_ui_lang();
 			setenv("LANGUAGE", ui_langs[lang].lang_region, 1);
 #endif

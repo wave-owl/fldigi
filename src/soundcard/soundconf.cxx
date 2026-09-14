@@ -176,7 +176,7 @@ static void init_portaudio(void)
 #if defined(__APPLE__)
 	pa_api_prio[paASIO] = 0;
 	pa_api_prio[paCoreAudio] = 1;
-#elif defined(__WOE32__)
+#elif defined(__WIN32__)
 	pa_api_prio[paASIO] = 0;
 	pa_api_prio[paWASAPI] = 1;
 	pa_api_prio[paMME] = 2;

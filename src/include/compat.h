@@ -50,7 +50,7 @@
 // change
 //#  if defined(WIN32) && !defined(__CYGWIN__) && !defined(__WATCOMC__)
 // to
-//#  if defined(WIN32) && !defined(__CYGWIN__) && !defined(__WATCOMC__) && !defined(__WOE32__)
+//#  if defined(WIN32) && !defined(__CYGWIN__) && !defined(__WATCOMC__) && !defined(__WIN32__)
 
 #ifdef __MINGW32__
 #	if FLDIGI_FLTK_API_MAJOR == 1 && FLDIGI_FLTK_API_MINOR < 3

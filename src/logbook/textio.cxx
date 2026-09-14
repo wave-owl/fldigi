@@ -30,7 +30,7 @@
 #include "lgbook.h"
 #include "globals.h"
 
-#ifdef __WOE32__
+#ifdef __WIN32__
 static const char *szEOL = "\r\n";
 #else
 static const char *szEOL = "\n";

@@ -985,7 +985,7 @@ void Cserial::SetRTS(bool b)
 //======================================================================
 #endif //__MINGW32__
 
-#ifdef __WOE32__
+#ifdef __WIN32__
 #include <sstream>
 #include "re.h"
 

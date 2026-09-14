@@ -52,7 +52,7 @@
 
 
 #  define DEFAULT_HAMRIGDEVICE "/dev/tty00"
-#elif defined(__WOE32__)
+#elif defined(__WIN32__)
 #  define DEFAULT_PTTDEV "COM1"
 #  define DEFAULT_CWFSKPORT "COM2"
 #  define DEFAULT_HAMRIGDEVICE "COM1"

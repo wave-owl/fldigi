@@ -4089,7 +4089,7 @@ static void pWX2(std::string &s, size_t &i, size_t endbracket)
 void set_macro_env(void)
 {
 	enum {
-#ifndef __WOE32__
+#ifndef __WIN32__
 		pSKEDH, FLDIGI_RX_IPC_KEY, FLDIGI_TX_IPC_KEY,
 #endif
 		FLDIGI_XMLRPC_ADDRESS,
@@ -4184,7 +4184,7 @@ void set_macro_env(void)
 		const char* var;
 		const char* val;
 	} env[] = {
-#ifndef __WOE32__
+#ifndef __WIN32__
 		{ "pSKEDH", "" },
 		{ "FLDIGI_RX_IPC_KEY", "" },
 		{ "FLDIGI_TX_IPC_KEY", "" },
@@ -4280,7 +4280,7 @@ void set_macro_env(void)
 
 	};
 
-#ifndef __WOE32__
+#ifndef __WIN32__
 	// pSKEDH
 	static std::string pSKEDh = ScriptsDir;
 	pSKEDh.erase(pSKEDh.length()-1,1);
@@ -4316,7 +4316,7 @@ void set_macro_env(void)
 	env[FLDIGI_FREQUENCY].val = freq;
 
 	// debugging vars
-#if !defined(NDEBUG) && !defined(__WOE32__)
+#if !defined(NDEBUG) && !defined(__WIN32__)
 	unsetenv("FLDIGI_NO_EXEC");
 	unsetenv("MALLOC_CHECK_");
 	unsetenv("MALLOC_PERTURB_");
@@ -5257,7 +5257,7 @@ void MACROTEXT::loadDefault()
 	progStatus.LastMacroFile = Filename;
 
 	if ((erc = loadMacros(Filename)) != 0)
-#ifndef __WOE32__
+#ifndef __WIN32__
 		LOG_ERROR("Error #%d loading %s\n", erc, Filename.c_str());
 #else
 	;
@@ -5270,7 +5270,7 @@ void MACROTEXT::loadDefault()
 \n================================================\n\
 Read macros from: ").append(progStatus.LastMacroFile).append("\
 \n================================================\n");
-#ifdef __WOE32__
+#ifdef __WIN32__
 		size_t p = std::string::npos;
 		while ( (p = Macroset.find("/")) != std::string::npos)
 			Macroset[p] = '\\';

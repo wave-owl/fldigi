@@ -537,7 +537,7 @@ void ARQ_SOCKET_Server::stop(void)
 	SET_THREAD_CANCEL();
 	MilliSleep(50);
 
-#if !defined(__WOE32__) && !defined(__APPLE__)
+#if !defined(__WIN32__) && !defined(__APPLE__)
 	int timeout = 10;
 	while(!server_stopped) {
 		MilliSleep(100);

@@ -45,7 +45,7 @@ int clock_gettime(clockid_t clock_id, struct timespec* tp)
 		tp->tv_nsec = t.tv_usec * 1000;
 	}
 	else if (clock_id == CLOCK_MONOTONIC) {
-#if defined(__WOE32__)
+#if defined(__WIN32__)
 		int32_t msec = GetTickCount();
 		tp->tv_sec = msec / 1000;
 		tp->tv_nsec = (msec % 1000) * 1000000;

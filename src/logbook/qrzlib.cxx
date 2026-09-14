@@ -41,7 +41,7 @@ static char QRZdir[256] = "";
 
 static const char *QRZpath;
 static const char *QRZtry[] = {
-#ifdef __WOE32__
+#ifdef __WIN32__
 	"C:/CALLBK/", // look on C: drive first
 	"D:/CALLBK/",
 	"E:/CALLBK/",

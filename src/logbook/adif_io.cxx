@@ -48,7 +48,7 @@ static pthread_mutex_t logfile_mutex = PTHREAD_MUTEX_INITIALIZER;
 size_t ptr, ptr2;
 std::string sbuff;
 
-#ifdef __WOE32__
+#ifdef __WIN32__
 static const char *szEOL = "\r\n";
 #else
 static const char *szEOL = "\n";

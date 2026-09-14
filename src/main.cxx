@@ -35,7 +35,7 @@ extern Fl_Scroll       *wefax_pic_rx_scroll;
 #include <getopt.h>
 #include <sys/types.h>
 
-#if !defined(__WOE32__) && !defined(__APPLE__)
+#if !defined(__WIN32__) && !defined(__APPLE__)
 #  include <sys/ipc.h>
 #  include <sys/msg.h>
 #endif
@@ -66,7 +66,7 @@ extern Fl_Scroll       *wefax_pic_rx_scroll;
 #endif
 #include <FL/filename.H>
 
-#ifdef __WOE32__
+#ifdef __WIN32__
 #	if FLDIGI_FLTK_API_MAJOR == 1 && FLDIGI_FLTK_API_MINOR < 3
 #		undef dirent
 #		include <dirent.h>
@@ -826,7 +826,7 @@ int main (int argc, char *argv[])
 	gpio_common_init();
 #endif
 
-#ifdef __WOE32__
+#ifdef __WIN32__
 	size_t p = appdir.rfind("fldigi.exe");
 	appdir.erase(p);
 	p = appdir.find("FL_APPS\\");
@@ -1006,7 +1006,7 @@ int main (int argc, char *argv[])
 	generate_version_text();
 	{
 		char dirbuf[FL_PATH_MAX + 1];
-#ifdef __WOE32__
+#ifdef __WIN32__
 		if (BaseDir.empty()) {
 			fl_filename_expand(dirbuf, sizeof(dirbuf) -1, "$USERPROFILE/");
 			BaseDir = dirbuf;
@@ -1030,7 +1030,7 @@ int main (int argc, char *argv[])
 	if (argv_window_title.empty())
 		argv_window_title.assign(PACKAGE_TARNAME);
 
-#ifdef __WOE32__
+#ifdef __WIN32__
 	if (HomeDir.empty()) HomeDir.assign(BaseDir).append("fldigi.files/");
 	if (PskMailDir.empty()) PskMailDir = BaseDir;
 	if (DATA_dir.empty()) DATA_dir.assign(BaseDir).append("DATA.files/");
@@ -1336,7 +1336,7 @@ LOG_INFO("FSEL::destroy()");
 void generate_option_help(void) {
 	ostringstream help;
 	string disp_base_dir = BaseDir;
-#ifdef __WOE32__
+#ifdef __WIN32__
 	size_t p = 0;
 	while ((p = disp_base_dir.find("/")) != string::npos)
 		disp_base_dir[p] = '\\';
@@ -1346,7 +1346,7 @@ void generate_option_help(void) {
 		 << "    " << PACKAGE_NAME << " [option...]\n\n";
 
 	help << PACKAGE_NAME << " options:\n\n"
-#if !defined(__WOE32__)
+#if !defined(__WIN32__)
 		 << "  --home-dir DIRECTORY\n"
 		 << "    Set the home directory to full pathname of DIRECTORY\n"
 		 << "    fldigi will put the file stores\n"
@@ -1370,7 +1370,7 @@ void generate_option_help(void) {
 		 << "    The default is: " << disp_base_dir << "fldigi.files\\\n\n"
 #endif
 
-#if !defined(__WOE32__) && !defined(__APPLE__)
+#if !defined(__WIN32__) && !defined(__APPLE__)
 		 << "  --rx-ipc-key KEY\n"
 		 << "    Set the receive message queue key\n"
 		 << "    May be given in hex if prefixed with \"0x\"\n"
@@ -1554,7 +1554,7 @@ int parse_args(int argc, char **argv, int& idx)
 	}
 
 	enum { OPT_ZERO,
-#ifndef __WOE32__
+#ifndef __WIN32__
 	   OPT_RX_IPC_KEY, OPT_TX_IPC_KEY,
 #endif
 	   OPT_HOME_DIR,
@@ -1595,7 +1595,7 @@ int parse_args(int argc, char **argv, int& idx)
 
 	static const char shortopts[] = ":";
 	static const struct option longopts[] = {
-#ifndef __WOE32__
+#ifndef __WIN32__
 		{ "rx-ipc-key",	   1, 0, OPT_RX_IPC_KEY },
 		{ "tx-ipc-key",	   1, 0, OPT_TX_IPC_KEY },
 #endif
@@ -1674,7 +1674,7 @@ int parse_args(int argc, char **argv, int& idx)
 			// handle options with non-0 flag here
 			return 0;
 
-#if !defined(__WOE32__) && !defined(__APPLE__)
+#if !defined(__WIN32__) && !defined(__APPLE__)
 		case OPT_RX_IPC_KEY: case OPT_TX_IPC_KEY:
 		{
 			errno = 0;
@@ -2025,7 +2025,7 @@ void set_platform_ui(void)
 	   progdefaults.WaterfallFontsize = 12;
 	   progdefaults.RxFontsize = 12;
 	   progdefaults.TxFontsize = 12;
-#elif defined(__WOE32__)
+#elif defined(__WIN32__)
 	   Fl::set_font(FL_HELVETICA, "Tahoma");
 	   FL_NORMAL_SIZE = 11;
 	   progdefaults.WaterfallFontnbr = FL_HELVETICA;
@@ -2085,7 +2085,7 @@ double speed_test(int converter, unsigned repeat)
 
 static void setup_signal_handlers(void)
 {
-#ifndef __WOE32__
+#ifndef __WIN32__
 	struct sigaction action;
 	memset(&action, 0, sizeof(struct sigaction));
 
@@ -2125,7 +2125,7 @@ static void fatal_error(string sz_error)
 	s.append(sz_error).append("\n").append(strerror(errno));
 
 // Win32 will display a MessageBox error message
-#if !defined(__WOE32__)
+#if !defined(__WIN32__)
 	fl_message_font(FL_HELVETICA, FL_NORMAL_SIZE);
 	fl_alert2("%s", s.c_str());
 #endif

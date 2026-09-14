@@ -31,7 +31,7 @@
 #include "fast_atof.h"
 
 #ifdef _DEBUG
-#ifndef __WOE32__
+#ifndef __WIN32__
 #define IRR_DEBUGPRINT(x) printf((x));
 #endif
 #else // _DEBUG 

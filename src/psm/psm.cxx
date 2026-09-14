@@ -41,7 +41,7 @@
 #include <sys/types.h>
 #include <sys/time.h>
 
-#if !defined(__WOE32__) && !defined(__APPLE__)
+#if !defined(__WIN32__) && !defined(__APPLE__)
 #  include <sys/ipc.h>
 #  include <sys/msg.h>
 #endif

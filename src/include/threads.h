@@ -120,7 +120,7 @@ bool thread_in_list(int id, const int* list);
 // On POSIX systems we cancel threads by sending them SIGUSR2,
 // which will also interrupt blocking calls.  On woe32 we use
 // pthread_cancel and there is no good/sane way to interrupt.
-#ifndef __WOE32__
+#ifndef __WIN32__
 #include <signal.h>
 #  define SET_THREAD_CANCEL()					\
 	do {							\

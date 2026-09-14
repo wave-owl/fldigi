@@ -23,7 +23,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#if !defined(__WOE32__) && !defined(__APPLE__)
+#if !defined(__WIN32__) && !defined(__APPLE__)
 #  include <sys/ipc.h>
 #  include <sys/msg.h>
 #endif
@@ -378,7 +378,7 @@ void submit_ADIF(cQsoRec &rec)
 // the following IPC message is compatible with xlog remote data spec.
 //---------------------------------------------------------------------
 
-#if !defined(__WOE32__) && !defined(__APPLE__)
+#if !defined(__WIN32__) && !defined(__APPLE__)
 
 #define addtomsg(x, y)	log_msg = log_msg + (x) + (y) + LOG_MSEPARATOR
 
@@ -450,7 +450,7 @@ static void send_IPC_log(cQsoRec &rec)
 
 void submit_record(cQsoRec &rec)
 {
-#if !defined(__WOE32__) && !defined(__APPLE__)
+#if !defined(__WIN32__) && !defined(__APPLE__)
 	send_IPC_log(rec);
 #endif
 	submit_ADIF(rec);

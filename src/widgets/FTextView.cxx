@@ -296,7 +296,7 @@ int FTextBase::readFile(const char* fn)
 
 	int ret = 0, pos = insert_position();
 
-#ifdef __WOE32__
+#ifdef __WIN32__
 	FILE* tfile = fl_fopen(fn, "rt");
 #else
 	FILE* tfile = fl_fopen(fn, "r");
@@ -346,7 +346,7 @@ void FTextBase::saveFile(void)
 {
  	const char *fn = FSEL::saveas(_("Save text as"), "Text\t*.txt");
 	if (fn) {
-#ifdef __WOE32__
+#ifdef __WIN32__
 		std::ofstream tfile(fn);
 		if (!tfile)
 			return;
@@ -797,14 +797,14 @@ int FTextEdit::handle_dnd_drop(void)
 	text = Fl::event_text();
 
 	const char sep[] = "\n";
-#if defined(__APPLE__) || defined(__WOE32__)
+#if defined(__APPLE__) || defined(__WIN32__)
 	text += sep;
 #endif
 
 	len = text.length();
 	while ((p = text.find(sep)) != std::string::npos) {
 		text[p] = '\0';
-#if !defined(__APPLE__) && !defined(__WOE32__)
+#if !defined(__APPLE__) && !defined(__WIN32__)
 		if (text.find("file://") == 0) {
 			text.erase(0, 7);
 			p -= 7;

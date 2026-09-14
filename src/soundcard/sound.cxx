@@ -2143,7 +2143,7 @@ void SoundPort::pa_perror(int err, const char* str)
 
 void SoundPort::init_hostapi_ext(void)
 {
-#if HAVE_DLOPEN && !defined(__WOE32__)
+#if HAVE_DLOPEN && !defined(__WIN32__)
 	void* handle = dlopen(NULL, RTLD_LAZY);
 	if (!handle)
 		return;

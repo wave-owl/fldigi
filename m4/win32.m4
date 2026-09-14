@@ -17,9 +17,7 @@ if test "x$target_win32" = "xyes"; then
     if [ test "x$WINDRES" = "x" ]; then
         AC_MSG_WARN([The windres utility could not be found])
     fi
-    AC_DEFINE([__WOE32__], 1, [Define to 1 if we are building on cygwin or mingw])
-    AC_DEFINE([__MINGW32__], 1, [Define to 1 if we are building on cygwin or mingw])
-    AC_DEFINE([_WINDOWS], 1, [Define to 1 if we are building on cygwin or mingw])
+    AC_DEFINE([_WINDOWS], 1, [Define to 1 if we are building for Windows])
 fi
 
 if test "x$target_mingw32" = "xyes"; then

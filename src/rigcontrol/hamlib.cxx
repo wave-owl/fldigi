@@ -45,7 +45,7 @@
 #include "rigsupport.h"
 
 #include "stacktrace.h"
-#ifdef __WOE32__
+#ifdef __WIN32__
 #  include "serial.h"
 #endif
 #include "debug.h"
