@@ -545,6 +545,95 @@ if(WIN32)
         setupapi
         hid
     )
+
+#
+# Windows NSIS installer
+#
+    find_program(MAKENSIS makensis)
+    find_program(MSGFMT msgfmt)
+
+    if(MAKENSIS)
+        set(INSTALLER_FILE
+            "${CMAKE_CURRENT_BINARY_DIR}/fldigi-${FLDIGI_VERSION}_setup.exe"
+        )
+
+        set(FLDIGI_LOCALES
+            ca
+            el
+            es
+            fr
+            it
+            pl
+            de
+            nl
+            ru
+        )
+
+        set(FLDIGI_MO_FILES)
+
+        if(MSGFMT)
+            foreach(lang IN LISTS FLDIGI_LOCALES)
+                set(mo_file
+                    "${CMAKE_CURRENT_BINARY_DIR}/share/locale/${lang}/LC_MESSAGES/fldigi.mo"
+                )
+
+                add_custom_command(
+                    OUTPUT "${mo_file}"
+                    COMMAND "${CMAKE_COMMAND}" -E make_directory
+                        "${CMAKE_CURRENT_BINARY_DIR}/share/locale/${lang}/LC_MESSAGES"
+                    COMMAND "${MSGFMT}"
+                        -c
+                        -o "${mo_file}"
+                        "${CMAKE_SOURCE_DIR}/po/${lang}.po"
+                    DEPENDS "${CMAKE_SOURCE_DIR}/po/${lang}.po"
+                    VERBATIM
+                    COMMENT "Building ${lang} message catalog"
+                )
+
+                list(APPEND FLDIGI_MO_FILES "${mo_file}")
+            endforeach()
+
+            add_custom_target(fldigi-locales
+                DEPENDS ${FLDIGI_MO_FILES}
+            )
+        endif()
+
+        set(NSIS_COMMAND
+            "${MAKENSIS}"
+            -V2
+            -NOCD
+            "-DINSTALLER_FILE=${INSTALLER_FILE}"
+            "-DLICENSE_FILE=${CMAKE_SOURCE_DIR}/COPYING"
+            "-DSUPPORT_URL=https://www.w1hkj.org/Fldigi.html"
+            "-DUPDATES_URL=https://www.w1hkj.org/download.html"
+            "-DFLDIGI_DOCS_URL=https://www.w1hkj.org/FldigiHelp/index.html"
+            "-DGUIDE_URL=https://www.w1hkj.org/beginners.html"
+            -DHAVE_FLDIGI
+            -DFLDIGI_NAME=Fldigi
+            -DFLDIGI_BINARY=fldigi.exe
+            "-DFLDIGI_VERSION=${FLDIGI_VERSION}"
+        )
+
+        if(MSGFMT)
+            list(APPEND NSIS_COMMAND
+                "-DFLDIGI_LOCALE_PATH=${CMAKE_CURRENT_BINARY_DIR}/share"
+                -DFLDIGI_LOCALE_DIR=locale
+            )
+        endif()
+
+        list(APPEND NSIS_COMMAND
+            "${CMAKE_SOURCE_DIR}/data/win32/fldigi.nsi"
+        )
+
+        add_custom_target(nsisinst
+            COMMAND ${NSIS_COMMAND}
+            DEPENDS fldigi ${FLDIGI_MO_FILES}
+            WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+            VERBATIM
+            COMMENT "Building ${INSTALLER_FILE}"
+        )
+    endif()
+
 endif()
 
 target_compile_definitions(fldigi PRIVATE
