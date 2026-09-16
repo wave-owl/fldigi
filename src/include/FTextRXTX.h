@@ -38,21 +38,11 @@ public:
 
 	virtual int	handle(int event);
 
-#if FLDIGI_FLTK_API_MAJOR == 1 && FLDIGI_FLTK_API_MINOR >= 3
 	virtual void	add(unsigned int  c, int attr = RECV);
 	virtual	void	add(const char *s, int attr = RECV)
-        {
-                while (*s)
-                        add(*s++, attr);
-        }
-#else
-	virtual void	add(unsigned char c, int attr = RECV);
-	virtual	void	add(const char *s, int attr = RECV)
-        {
-                while (*s)
-                        add(*s++, attr);
-        }
-#endif
+	{
+		while (*s) add(*s++, attr);
+	}
 
 	void		set_all_entry(bool b);
 	bool		get_quick_entry(void) { return menu[RX_MENU_ALL_ENTRY].value(); }

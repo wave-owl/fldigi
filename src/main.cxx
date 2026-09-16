@@ -66,15 +66,7 @@ extern Fl_Scroll       *wefax_pic_rx_scroll;
 #endif
 #include <FL/filename.H>
 
-#ifdef __WIN32__
-#	if FLDIGI_FLTK_API_MAJOR == 1 && FLDIGI_FLTK_API_MINOR < 3
-#		undef dirent
-#		include <dirent.h>
-#	endif
-#else
-#	include <dirent.h>
-#endif
-
+#include <dirent.h>
 
 #include "gettext.h"
 #include "main.h"
@@ -1190,11 +1182,8 @@ int main (int argc, char *argv[])
 
 	FSEL::create();
 
-#if FLDIGI_FLTK_API_MAJOR == 1 && FLDIGI_FLTK_API_MINOR < 3
-		listbox_charset_status->hide();
-#else
-		listbox_charset_status->show();
-#endif
+	listbox_charset_status->show();
+
 	populate_charset_listbox();
 	set_default_charset();
 	setTabColors();
