@@ -24,6 +24,9 @@ UniCode True
 # Compression options
 SetCompressor /SOLID lzma
 
+# Registry key used to remember the installation directory
+!define INSTALL_DIR_REG_KEY SOFTWARE\${PRODUCT_STRING}
+
 # This function is called before displaying the first installer page.
 # It aborts the installation if Windows is not 64 bit.
 !include x64.nsh
@@ -37,9 +40,14 @@ Function .onInit
 
     SetRegView 64
 
-    # The default installation directory
-    # The default installation directory
+    # Default installation directory
     StrCpy $INSTDIR $PROGRAMFILES64\${PRODUCT_STRING}
+
+    # Preserve the previous installation directory on upgrades.
+    ReadRegStr $0 HKLM "${INSTALL_DIR_REG_KEY}" "Install_Dir"
+    ${If} $0 != ""
+        StrCpy $INSTDIR $0
+    ${EndIf}
 FunctionEnd
 
 # The name of the installer
@@ -47,11 +55,6 @@ Name "${PRODUCT_DESCRIPTION}"
 
 # The file to write
 OutFile ${INSTALLER_FILE}
-
-# Registry key to check for directory (so if you install again, it will
-# overwrite the old one automatically)
-!define INSTALL_DIR_REG_KEY SOFTWARE\${PRODUCT_STRING}
-InstallDirRegKey HKLM "${INSTALL_DIR_REG_KEY}" "Install_Dir"
 
 # Request application privileges for Windows Vista
 RequestExecutionLevel admin
