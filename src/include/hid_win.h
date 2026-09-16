@@ -46,11 +46,6 @@ typedef LONG NTSTATUS;
 //#include <hidsdi.h>
 #endif
 
-//#ifdef __CYGWIN__
-//#include <ntdef.h>
-//#define _wcsdup wcsdup
-//#endif
-
 /* The maximum number of characters that can be passed into the
    HidD_Get*String() functions without it failing.*/
 #define MAX_STRING_WCHARS 0xFFF

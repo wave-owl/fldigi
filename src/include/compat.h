@@ -46,11 +46,6 @@
 #include <sys/param.h>
 #include <sys/types.h>
 
-// this tests depends on a modified FL/filename.H in the Fltk-1.3.0
-// change
-//#  if defined(WIN32) && !defined(__CYGWIN__) && !defined(__WATCOMC__)
-// to
-//#  if defined(WIN32) && !defined(__CYGWIN__) && !defined(__WATCOMC__) && !defined(__WIN32__)
 
 #ifdef __MINGW32__
 #	if FLDIGI_FLTK_API_MAJOR == 1 && FLDIGI_FLTK_API_MINOR < 3
