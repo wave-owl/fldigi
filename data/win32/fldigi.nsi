@@ -35,11 +35,8 @@ Function .onInit
         Abort
     ${EndIf}
     # The default installation directory
-    ${If} ${RunningX64}
-        StrCpy $INSTDIR $PROGRAMFILES64\${PRODUCT_STRING}
-    ${Else}
-        StrCpy $INSTDIR $PROGRAMFILES\${PRODUCT_STRING}
-    ${EndIf}
+    # The default installation directory
+    StrCpy $INSTDIR $PROGRAMFILES64\${PRODUCT_STRING}
 FunctionEnd
 
 # The name of the installer
