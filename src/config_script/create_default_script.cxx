@@ -633,12 +633,11 @@ static int add_command(FILE *fd, char *cmd, char *param, int indent_level)
 		return -1;
 
 	bool q_flag = false;
-	int size = strnlen(param, FILENAME_MAX);
+	size_t size = strlen(param);
 
 	if(size < 1) return 0;
 
-	for(int i = 0; i < size; i++) {
-		if(param[i] == 0) break;
+	for(size_t i = 0; i < size; i++) {
 		if((param[i] == ',') || (param[i] <= ' ')) {
 			q_flag = true;
 		}
