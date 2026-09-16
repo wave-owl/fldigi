@@ -181,11 +181,6 @@ bool hamlib_init(bool bPtt)
 
 	hamlib_init_defaults();
 
-#ifdef __CYGWIN__
-	std::string port = progdefaults.HamRigDevice;
-	com_to_tty(port);
-#endif
-
 	if (progdefaults.HamRigModel == 0) {
 		LOG_ERROR("No such hamlib rig model");
 		return false;
@@ -196,11 +191,7 @@ bool hamlib_init(bool bPtt)
 
 		xcvr->init(progdefaults.HamRigModel);
 
-#ifdef __CYGWIN__
-		xcvr->setConf("rig_pathname", port.c_str());
-#else
 		xcvr->setConf("rig_pathname", progdefaults.HamRigDevice.c_str());
-#endif
 
 		snprintf(szParam, sizeof(szParam), "%d", progdefaults.HamlibWait);
 		xcvr->setConf("post_write_delay", szParam);

@@ -84,10 +84,6 @@ Cserial::~Cserial() {
 ///////////////////////////////////////////////////////
 bool Cserial::OpenPort()  {
 
-#ifdef __CYGWIN__
-	com_to_tty(device);
-#endif
-
 	int oflags = O_RDWR | O_NOCTTY | O_NDELAY;
 #	ifdef HAVE_O_CLOEXEC
 		oflags = oflags | O_CLOEXEC;

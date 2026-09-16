@@ -24,10 +24,7 @@
 
 #include <unistd.h>
 #include <errno.h>
-#if defined(__CYGWIN__)
-#  include <sys/types.h>
-#  include <sys/socket.h>
-#elif defined(__MINGW32__)
+#ifdef __MINGW32__
 #  include "compat.h"
 #endif
 #include <fcntl.h>

@@ -80,21 +80,7 @@
 
 #endif
 
-#ifndef __CYGWIN__
-
-#  include <sys/stat.h>
-
-#else
-
-#  include <fcntl.h>
-
-#endif
-
-// this tests depends on a modified FL/filename.H in the Fltk-1.3.0
-// change
-//#  if defined(WIN32) && !defined(__CYGWIN__) && !defined(__WATCOMC__)
-// to
-//#  if defined(WIN32) && !defined(__CYGWIN__) && !defined(__WATCOMC__) && !defined(__WIN32__)
+#include <sys/stat.h>
 
 #include <dirent.h>
 
