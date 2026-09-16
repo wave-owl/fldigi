@@ -25,15 +25,16 @@ UniCode True
 SetCompressor /SOLID lzma
 
 # This function is called before displaying the first installer page.
-# It aborts the installation if the Windows version is too old.
-!include WinVer.nsh
+# It aborts the installation if Windows is not 64 bit.
+!include x64.nsh
+
 Function .onInit
-    ${IfNot} ${AtLeastWin2000}
-        MessageBox MB_ICONSTOP "Sorry, your Windows version is too old.$\n${PRODUCT_NAME} requires Windows 2000 or later."
+    ${IfNot} ${RunningX64}
+        MessageBox MB_ICONSTOP \
+            "Sorry, this version of ${PRODUCT_NAME} requires 64-bit Windows."
         Abort
     ${EndIf}
     # The default installation directory
-    !include x64.nsh
     ${If} ${RunningX64}
         StrCpy $INSTDIR $PROGRAMFILES64\${PRODUCT_STRING}
     ${Else}
