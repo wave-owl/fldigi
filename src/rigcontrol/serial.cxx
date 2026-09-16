@@ -985,24 +985,6 @@ void Cserial::SetRTS(bool b)
 #include <sstream>
 #include "re.h"
 
-// convert COMx to /dev/ttySy with y = x - 1
-void com_to_tty(std::string& port)
-{
-	re_t re("com([0-9]+)", REG_EXTENDED | REG_ICASE);
-	if (!(re.match(port.c_str()) && re.nsub() == 2))
-		return;
-	std::stringstream ss;
-	int n;
-	ss << re.submatch(1);
-	ss >> n;
-	if (--n < 0)
-		n = 0;
-	ss.clear(); ss.str("");
-	ss << "/dev/ttyS" << n;
-	ss.seekp(0);
-	port = ss.str();
-}
-
 // convert  /dev/ttySx to COMy with y = x + 1
 void tty_to_com(std::string& port)
 {

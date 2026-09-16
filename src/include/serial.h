@@ -22,7 +22,7 @@
 #define SERIAL_H
 
 #include <string>
-void com_to_tty(std::string& port);
+
 void tty_to_com(std::string& port);
 
 #ifndef __MINGW32__
