@@ -34,6 +34,9 @@ Function .onInit
             "Sorry, this version of ${PRODUCT_NAME} requires 64-bit Windows."
         Abort
     ${EndIf}
+
+    SetRegView 64
+
     # The default installation directory
     # The default installation directory
     StrCpy $INSTDIR $PROGRAMFILES64\${PRODUCT_STRING}
@@ -87,6 +90,8 @@ UninstPage instfiles
 # This is a hidden section and is always selected.  It writes the uninstall
 # registry keys and uninstaller binary.
 Section -install
+    SetRegView 64
+
     # Set output path to the installation directory.
     SetOutPath $INSTDIR
     # Write the installation paths into the registry
@@ -161,6 +166,8 @@ SectionEnd
 
 # Uninstaller
 Section "Uninstall"
+    SetRegView 64
+
     # Remove registry keys
     DeleteRegKey HKLM "${REG_UNINSTALL_PATH}"
     DeleteRegKey HKLM "${INSTALL_DIR_REG_KEY}"
