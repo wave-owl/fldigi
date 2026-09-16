@@ -26,13 +26,16 @@ find_package(Threads REQUIRED)
 pkg_check_modules(PORTAUDIO REQUIRED IMPORTED_TARGET portaudio-2.0)
 pkg_check_modules(SNDFILE REQUIRED IMPORTED_TARGET sndfile)
 pkg_check_modules(SAMPLERATE REQUIRED IMPORTED_TARGET samplerate)
-pkg_check_modules(PULSEAUDIO REQUIRED IMPORTED_TARGET libpulse-simple)
+
+if(NOT WIN32)
+    pkg_check_modules(PULSEAUDIO REQUIRED IMPORTED_TARGET libpulse-simple)
+    pkg_check_modules(UDEV REQUIRED IMPORTED_TARGET libudev)
+    find_package(X11 REQUIRED)
+    pkg_check_modules(X11_VERSION_INFO REQUIRED x11)
+endif()
+
 pkg_check_modules(HAMLIB REQUIRED IMPORTED_TARGET hamlib)
 pkg_check_modules(PNG REQUIRED IMPORTED_TARGET libpng)
-pkg_check_modules(UDEV REQUIRED IMPORTED_TARGET libudev)
-
-find_package(X11 REQUIRED)
-pkg_check_modules(X11_VERSION_INFO REQUIRED x11)
 
 #
 # FLTK
@@ -41,11 +44,21 @@ pkg_check_modules(X11_VERSION_INFO REQUIRED x11)
 # link options as the existing Autotools build.
 #
 
-find_program(FLTK_CONFIG
-    NAMES fltk-config
-    HINTS /usr/local/bin
-    REQUIRED
-)
+if(WIN32)
+    find_program(FLTK_CONFIG
+        NAMES fltk-config
+        PATHS
+            "$ENV{HOME}/mxe/usr/x86_64-w64-mingw32.static/bin"
+        NO_DEFAULT_PATH
+        REQUIRED
+    )
+else()
+    find_program(FLTK_CONFIG
+        NAMES fltk-config
+        HINTS /usr/local/bin
+        REQUIRED
+    )
+endif()
 
 execute_process(
     COMMAND ${FLTK_CONFIG} --version
@@ -83,20 +96,38 @@ message(STATUS "FLTK ldflags: ${FLTK_LDFLAGS_STRING}")
 # Autotools configuration.
 #
 
+set(GCC_VER_OK 1)
+
 set(ENABLE_NLS 1)
 
-set(USE_FLXMLRPC 0)
-set(USE_HAMLIB 1)
-set(USE_LIBGPIOD 0)
-set(USE_LIBMBEDTLS 0)
-set(USE_OSS 1)
-set(USE_PNG 1)
-set(USE_PORTAUDIO 1)
-set(USE_PULSEAUDIO 1)
-set(USE_SAMPLERATE 1)
-set(USE_SNDFILE 1)
-set(USE_TLS 1)
-set(USE_X 1)
+if(WIN32)
+    set(_WINDOWS 1)
+    set(USE_FLXMLRPC 0)
+    set(USE_HAMLIB 1)
+    set(USE_LIBGPIOD 0)
+    set(USE_LIBMBEDTLS 0)
+    set(USE_OSS 0)
+    set(USE_PNG 1)
+    set(USE_PORTAUDIO 1)
+    set(USE_PULSEAUDIO 0)
+    set(USE_SAMPLERATE 1)
+    set(USE_SNDFILE 1)
+    set(USE_TLS 0)
+    set(USE_X 0)
+else()
+    set(USE_FLXMLRPC 0)
+    set(USE_HAMLIB 1)
+    set(USE_LIBGPIOD 0)
+    set(USE_LIBMBEDTLS 0)
+    set(USE_OSS 1)
+    set(USE_PNG 1)
+    set(USE_PORTAUDIO 1)
+    set(USE_PULSEAUDIO 1)
+    set(USE_SAMPLERATE 1)
+    set(USE_SNDFILE 1)
+    set(USE_TLS 1)
+    set(USE_X 1)
+endif()
 
 set(FLDIGI_AUTHORS "Dave Freese, Stelios Bounanos, and others")
 
@@ -147,10 +178,16 @@ set(LIBGPIOD_BUILD_VERSION "")
 set(LIBMBEDTLS_BUILD_VERSION "")
 set(PNG_BUILD_VERSION "${PNG_VERSION}")
 set(PORTAUDIO_BUILD_VERSION "${PORTAUDIO_VERSION}")
-set(PULSEAUDIO_BUILD_VERSION "${PULSEAUDIO_VERSION}")
 set(SAMPLERATE_BUILD_VERSION "${SAMPLERATE_VERSION}")
 set(SNDFILE_BUILD_VERSION "${SNDFILE_VERSION}")
-set(X_BUILD_VERSION "${X11_VERSION_INFO_VERSION}")
+
+if(NOT WIN32)
+    set(PULSEAUDIO_BUILD_VERSION "${PULSEAUDIO_VERSION}")
+    set(X_BUILD_VERSION "${X11_VERSION_INFO_VERSION}")
+else()
+    set(PULSEAUDIO_BUILD_VERSION "")
+    set(X_BUILD_VERSION "")
+endif()
 
 set(FLDIGI_BUILD_CXXFLAGS
     "${FLTK_CXXFLAGS_STRING} -pipe -Wall -fexceptions"
@@ -410,6 +447,8 @@ set(FLDIGI_SOURCES
 
     src/wwv/analysis.cxx
     src/wwv/wwv.cxx
+
+    src/compat/regex.c
 )
 
 set(FLDIGI_XMLRPC_SOURCES
@@ -442,22 +481,71 @@ add_executable(fldigi
     ${FLDIGI_NLS_SOURCES}
 )
 
+if(WIN32)
+    string(TIMESTAMP RC_BUILD_TIME "%s" UTC)
+
+    set(FLDIGI_RC_OBJECT
+        "${CMAKE_CURRENT_BINARY_DIR}/fldigirc.rc.o"
+    )
+
+    add_custom_command(
+        OUTPUT "${FLDIGI_RC_OBJECT}"
+        COMMAND "${CMAKE_RC_COMPILER}"
+            "-DRC_BUILD_TIME=\\\"${RC_BUILD_TIME}\\\""
+            "-I${CMAKE_BINARY_DIR}/src"
+            "-I${CMAKE_SOURCE_DIR}/src"
+            "-I${CMAKE_SOURCE_DIR}/src/include"
+            "-I${CMAKE_SOURCE_DIR}/data/win32"
+            "${CMAKE_SOURCE_DIR}/src/fldigirc.rc"
+            -O coff
+            "${FLDIGI_RC_OBJECT}"
+        DEPENDS
+            "${CMAKE_SOURCE_DIR}/src/fldigirc.rc"
+            "${CMAKE_SOURCE_DIR}/src/common.rc"
+            "${CMAKE_BINARY_DIR}/src/config.h"
+        VERBATIM
+        COMMENT "Building Windows resource fldigirc.rc"
+    )
+
+    target_sources(fldigi PRIVATE
+        src/compat/getsysinfo.c
+        src/compat/mingw.c
+        "${FLDIGI_RC_OBJECT}"
+    )
+endif()
+
 target_link_libraries(fldigi PRIVATE
     PkgConfig::PORTAUDIO
     PkgConfig::SNDFILE
     PkgConfig::SAMPLERATE
-    PkgConfig::PULSEAUDIO
     PkgConfig::HAMLIB
     PkgConfig::PNG
-    PkgConfig::UDEV
 
     ${FLTK_LDFLAGS}
-    ${X11_LIBRARIES}
 
     Threads::Threads
-    m
-    dl
 )
+
+if(NOT WIN32)
+    target_link_libraries(fldigi PRIVATE
+        PkgConfig::PULSEAUDIO
+        PkgConfig::UDEV
+        ${X11_LIBRARIES}
+        m
+        dl
+    )
+endif()
+
+if(WIN32)
+    target_link_libraries(fldigi PRIVATE
+        intl
+        iconv
+        wsock32
+        ws2_32
+        setupapi
+        hid
+    )
+endif()
 
 target_compile_definitions(fldigi PRIVATE
     HAVE_CONFIG_H

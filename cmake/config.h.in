@@ -128,6 +128,10 @@
 #cmakedefine HAVE_STD_BIND 1
 #cmakedefine HAVE_STD_HASH 1
 
+#cmakedefine _WINDOWS 1
+
+#define GCC_VER_OK @GCC_VER_OK@
+
 #define USE_FLXMLRPC @USE_FLXMLRPC@
 #define USE_HAMLIB @USE_HAMLIB@
 #define USE_LIBGPIOD @USE_LIBGPIOD@
