@@ -375,13 +375,11 @@ void status::saveLastState()
 	mainX = fl_digi_main->x();
 	mainY = fl_digi_main->y();
 
-#if FLDIGI_FLTK_API_MINOR >3
 	screen_number = fl_digi_main->screen_num();
 	screen_scale = Fl::screen_scale(screen_number);
 	Fl::screen_xywh( scrx, scry, scrw, scrh);
 	mainX -= scrx;
 	mainY -= scry;
-#endif
 
 	mainW = fl_digi_main->w();
 	mainH = fl_digi_main->h();
@@ -1317,10 +1315,8 @@ void status::initLastState()
 
 	kiss_io_set_button_state(0);
 
-#if FLDIGI_FLTK_API_MINOR >3
 	fl_digi_main->screen_num(screen_number);
 	Fl::screen_scale(screen_number, screen_scale);
-#endif
 
 	if (bWF_only)
 		fl_digi_main->resize(mainX, mainY, mainW, Hmenu + Hwfall + Hstatus);
