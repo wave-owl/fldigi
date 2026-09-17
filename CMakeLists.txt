@@ -66,17 +66,17 @@ execute_process(
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
+if(FLTK_VERSION VERSION_LESS "1.4.0")
+    message(FATAL_ERROR
+        "FLTK 1.4 or later is required; found ${FLTK_VERSION}"
+    )
+endif()
+
 execute_process(
     COMMAND ${FLTK_CONFIG} --cxxflags
     OUTPUT_VARIABLE FLTK_CXXFLAGS_STRING
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-
-string(REPLACE "." ";" FLTK_VERSION_PARTS "${FLTK_VERSION}")
-
-list(GET FLTK_VERSION_PARTS 0 FLDIGI_FLTK_API_MAJOR)
-list(GET FLTK_VERSION_PARTS 1 FLDIGI_FLTK_API_MINOR)
-list(GET FLTK_VERSION_PARTS 2 FLDIGI_FLTK_API_PATCH)
 
 execute_process(
     COMMAND ${FLTK_CONFIG} --ldflags --use-images
