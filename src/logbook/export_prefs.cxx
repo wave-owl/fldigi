@@ -103,15 +103,11 @@ export_prefs export_defaults = {
 
 void export_prefs::save_defaults()
 {
-#if FLDIGI_FLTK_API_MINOR < 4
-	Fl_Preferences spref(HomeDir.c_str(), "w1hkj.org", EXPORT_PREFS_FILENAME);
-#else
 	Fl_Preferences spref(
 		HomeDir.c_str(),
 		"w1hkj.org",
 		EXPORT_PREFS_FILENAME,
 		Fl_Preferences::C_LOCALE);
-#endif
 
 	Call = btnSelectCall->value();
 	Name = btnSelectName->value();
@@ -217,15 +213,11 @@ void export_prefs::save_defaults()
 
 void export_prefs::load_defaults()
 {
-#if FLDIGI_FLTK_API_MINOR < 4
-	Fl_Preferences spref(HomeDir.c_str(), "w1hkj.org", EXPORT_PREFS_FILENAME);
-#else
 	Fl_Preferences spref(
 		HomeDir.c_str(),
 		"w1hkj.org",
 		EXPORT_PREFS_FILENAME,
 		Fl_Preferences::C_LOCALE);
-#endif
 
 	spref.get("Call", Call, Call);
 	spref.get("Name", Name, Name);
