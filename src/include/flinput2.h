@@ -38,11 +38,9 @@ public:
 	Fl_Input2(int x, int y, int w, int h, const char* l = 0);
 	int handle(int event);
 
-#if FLDIGI_FLTK_API_MINOR > 3
 	int position() { return Fl_Input::insert_position(); }
 	int position(int p, int m) { return Fl_Input::insert_position(p, m); }
 	int position(int p) { return Fl_Input::insert_position(p, p); }
-#endif
 
 };
 
