@@ -2740,15 +2740,9 @@ SOAPBOX: \n\n",
     return;
 }
 
-#if HAVE_STD_HASH
-#	include <unordered_map>
- 	typedef std::unordered_map<std::string, unsigned> dxcc_entity_cache_t;
-#elif HAVE_STD_TR1_HASH
-#	include <tr1/unordered_map>
- 	typedef std::tr1::unordered_map<std::string, unsigned> dxcc_entity_cache_t;
-#else
-#	error "No std::hash or std::tr1::hash support"
-#endif
+#include <unordered_map>
+
+typedef std::unordered_map<std::string, unsigned> dxcc_entity_cache_t;
 
 static dxcc_entity_cache_t dxcc_entity_cache;
 static bool dxcc_entity_cache_enabled = false;

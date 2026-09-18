@@ -117,23 +117,12 @@ void re_t::suboff(size_t n, int* start, int* end) const
 	}
 }
 
-#if  HAVE_STD_HASH
-#	include <functional>
-#elif HAVE_STD_TR1_HASH
-#	include <tr1/functional>
-#else
-#	error "No std::hash or std::tr1::hash support"
-#endif
+#include <functional>
 
 size_t re_t::hash(void) const
 {
-#if HAVE_STD_HASH
 	size_t h = std::hash<std::string>()(pattern);
 	return h ^ (std::hash<int>()(cflags) + 0x9e3779b9 + (h << 6) + (h >> 2));
-#elif HAVE_STD_TR1_HASH
-	size_t h = std::tr1::hash<std::string>()(pattern);
-	return h ^ (std::tr1::hash<int>()(cflags) + 0x9e3779b9 + (h << 6) + (h >> 2));
-#endif
 }
 
 // ------------------------------------------------------------------------

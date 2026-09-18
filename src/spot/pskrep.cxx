@@ -52,32 +52,10 @@
 #include <algorithm>
 #include <fstream>
 
-#if GCC_VER_OK
-#	if HAVE_STD_HASH
-#		define MAP_TYPE std::unordered_map
-#		define HASH_TYPE std::hash
-#		include <unordered_map>
-#	else
-#		if 	HAVE_STD_TR1_HASH
-#			define MAP_TYPE std::tr1::unordered_map
-#			define HASH_TYPE std::tr1::hash
-#			include <tr1/unordered_map>
-#		endif
-#	endif
-#else
-// use the non-standard gnu hash_map on gcc < 4.1.0
-// which has a broken tr1::unordered_map::operator=
-#	define MAP_TYPE __gnu_cxx::hash_map
-#	define HASH_TYPE __gnu_cxx::hash
-#	include <ext/hash_map>
-namespace __gnu_cxx {
-	// define the missing hash specialisation for std::string
-	// using the 'const char*' hash function
-	template<> struct hash<std::string> {
-		size_t operator()(const std::string& s) const { return __stl_hash_string(s.c_str()); }
-	};
-}
-#endif
+#include <unordered_map>
+
+#define MAP_TYPE std::unordered_map
+#define HASH_TYPE std::hash
 
 #include <FL/Fl.H>
 

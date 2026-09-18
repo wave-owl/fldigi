@@ -24,14 +24,7 @@
 #include <iostream>
 
 #include <list>
-
-#if HAVE_STD_HASH
-#	include <unordered_map>
-#elif HAVE_STD_TR1_HASH
-#	include <tr1/unordered_map>
-#else
-#	error "No std::hash or std::tr1::hash support"
-#endif
+#include <unordered_map>
 
 #include "trx.h"
 #include "globals.h"
@@ -76,13 +69,8 @@ struct fre_comp : std::unary_function<const fre_t*, bool>
 
 typedef std::list<callback_t*> callback_p_list_t;
 
-#if HAVE_STD_HASH
-	typedef std::unordered_map<fre_t*, callback_p_list_t, fre_hash, fre_comp> rcblist_t;
-	static std::unordered_map<int, std::string> buffers;
-#elif HAVE_STD_TR1_HASH
-	typedef std::tr1::unordered_map<fre_t*, callback_p_list_t, fre_hash, fre_comp> rcblist_t;
-	static std::tr1::unordered_map<int, std::string> buffers;
-#endif
+typedef std::unordered_map<fre_t*, callback_p_list_t, fre_hash, fre_comp> rcblist_t;
+static std::unordered_map<int, std::string> buffers;
 
 static cblist_t cblist;
 static rcblist_t rcblist;

@@ -91,17 +91,3 @@ check_c_source_compiles(
 )
 
 include(CheckCXXSourceCompiles)
-
-check_cxx_source_compiles(
-    "
-    #include <functional>
-    #include <string>
-
-    int main()
-    {
-        std::hash<std::string> h;
-        return h(\"fldigi\") == 0;
-    }
-    "
-    HAVE_STD_HASH
-)
