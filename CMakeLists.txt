@@ -645,6 +645,8 @@ target_compile_definitions(fldigi PRIVATE
 )
 
 target_include_directories(fldigi PRIVATE
+    ${CMAKE_BINARY_DIR}/src
+
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/include
     ${CMAKE_SOURCE_DIR}/src/irrxml
@@ -652,8 +654,6 @@ target_include_directories(fldigi PRIVATE
     ${CMAKE_SOURCE_DIR}/src/fileselector
     ${CMAKE_SOURCE_DIR}/src/xmlrpcpp
     ${CMAKE_SOURCE_DIR}/src/mbedtls
-
-    ${CMAKE_BINARY_DIR}/src
 )
 
 
