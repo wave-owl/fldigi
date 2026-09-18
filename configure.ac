@@ -81,8 +81,8 @@ AC_PROG_CXX
 AC_PROG_CC
 AC_USE_SYSTEM_EXTENSIONS
 
-#Check for C++11 compliance
-AX_CXX_COMPILE_STDCXX_11(, optional)
+# Require C++11 support
+AX_CXX_COMPILE_STDCXX_11(, mandatory)
 
 # Checks for header files.
 AC_CHECK_INCLUDES_DEFAULT

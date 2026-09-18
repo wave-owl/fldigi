@@ -11,6 +11,11 @@ project(fldigi
     LANGUAGES C CXX
 )
 
+# fldigi requires a C++11-capable compiler.
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS ON)
+
 include(cmake/CheckFeatures.cmake)
 
 include(GNUInstallDirs)

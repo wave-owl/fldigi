@@ -4,7 +4,7 @@ const char* szBeginner = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
 <html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n\
 <head>\n\
 <meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=UTF-8\" />\n\
-<meta name=\"generator\" content=\"AsciiDoc 10.1.2\" />\n\
+<meta name=\"generator\" content=\"AsciiDoc 10.2.0\" />\n\
 <title>Beginners' Guide to Fldigi</title>\n\
 <style type=\"text/css\">\n\
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */\n\
@@ -2039,7 +2039,7 @@ numeric keypad&#8217;s 0-9 the sequence will be discarded.</p></div>\n\
 <div id=\"footer\">\n\
 <div id=\"footer-text\">\n\
 Last updated\n\
- 2025-07-04 15:44:13 \n\
+ 2026-09-10 22:08:57 \n\
 </div>\n\
 <div id=\"footer-badges\">\n\
 <a href=\"https://validator.w3.org/check?uri=referer\">\n\
