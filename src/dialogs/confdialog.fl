@@ -12369,7 +12369,7 @@ Function {closeDialog()} {return_type void
 
 Function {WefaxDestDirSet(Fl_File_Chooser *w, void *userdata)} {return_type void
 } {
-  code {/* http://www.fltk.org/documentation.php/doc-1.1/Fl_File_Chooser.html */
+  code {
 if( ( w->value() != NULL ) && ( ! w->shown() ) ) {
 	btnWefaxSaveDir->value( w->value() );
 	btnWefaxSaveDir->redraw();
@@ -12379,7 +12379,7 @@ if( ( w->value() != NULL ) && ( ! w->shown() ) ) {
 
 Function {KmlDestDirSet(Fl_File_Chooser *w, void *userdata)} {return_type void
 } {
-  code {/* http://www.fltk.org/documentation.php/doc-1.1/Fl_File_Chooser.html */
+  code {
 if( ( w->value() != NULL ) && ( ! w->shown() ) ) {
 	btnKmlSaveDir->value( w->value() );
 	btnKmlSaveDir->redraw();
