@@ -121,7 +121,6 @@
 #cmakedefine HAVE_O_CLOEXEC 1
 #cmakedefine HAVE__BOOL 1
 #cmakedefine HAVE_CXX11 1
-#cmakedefine HAVE_STD_BIND 1
 #cmakedefine HAVE_STD_HASH 1
 
 #cmakedefine _WINDOWS 1

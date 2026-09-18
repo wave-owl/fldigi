@@ -94,35 +94,6 @@ include(CheckCXXSourceCompiles)
 
 check_cxx_source_compiles(
     "
-    int main()
-    {
-        auto x = 1;
-        return x - 1;
-    }
-    "
-    HAVE_CXX11
-)
-
-check_cxx_source_compiles(
-    "
-    #include <functional>
-
-    int f(int x)
-    {
-        return x;
-    }
-
-    int main()
-    {
-        auto fn = std::bind(f, 1);
-        return fn() - 1;
-    }
-    "
-    HAVE_STD_BIND
-)
-
-check_cxx_source_compiles(
-    "
     #include <functional>
     #include <string>
 

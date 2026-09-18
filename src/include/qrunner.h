@@ -34,19 +34,11 @@
 #include <cstring>
 #include <string>
 
-#if HAVE_STD_BIND
-#   include <functional>
+#include <functional>
+
 namespace qrbind {
     using std::bind;
 };
-#elif HAVE_STD_TR1_BIND
-#   include <tr1/functional>
-namespace qrbind {
-    using std::tr1::bind;
-};
-#else
-#   error need std::bind or std::tr1::bind
-#endif
 
 #include "threads.h"
 #include "qrunner/fqueue.h"

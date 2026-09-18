@@ -175,13 +175,6 @@ AC_FLDIGI_BENCHMARK
 # Define USE_TLS in config.h
 AC_FLDIGI_TLS
 
-### std::bind or alternatives
-# Set ac_cv_std_bind or ac_cv_std_tr1_bind to yes/no
-# Define HAVE_STD_BIND or HAVE_STD_TR1_BIND in config.h
-# Substitute BOOST_CPPFLAGS and BOOST_LDFLAGS in Makefile
-# if falling back to Boost
-AC_FLDIGI_BIND
-
 ### std::hash or alternatives
 # Set ac_cv_std_hash or ac_cv_std_tr1_hash to yes/no
 # Define HAVE_STD_HASH or HAVE_STD_TR1_HASH in config.h
