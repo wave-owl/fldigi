@@ -5,8 +5,7 @@
 
 
 The port of fldigi to the Windows operating system is built using
-cross-compilers on Linux.  The cross-compilation environment is
-created using mingw32.
+mxe cross-compilation environment on Linux.
 <br>
 
 Installing fldigi on windows is very simple.  Simply execute the
@@ -62,41 +61,9 @@ complex program with many ways for the user to customize its operation
 to his or her hardware environment.
 <br>
 
-
-\section special_note Special Note for Vista/Win7 from user!
-
-I am trying to install the latest and greatest version of FLDIGI and
-FLARQ on a new Toshiba laptop computer that runs Vista/Win7 / Win7.  The main
-screen of FLDIGI comes up ok and it says that no call sign has been set
-and down in the bottom center right there is an <b>error message about
-there not being the sound card that it thinks it should see</b>.
-I understand the messages as the program needs to be configured.
-The problem is that when I click on 'Configuration' the main screen
-grays out and it seems to go off into never never land and not comeback
-or put up the configuration window.  At that point the only thing
-that works on the main screen is the close button.  What am I
-missing?
-<br>
-
-I solved the mystery!  Cockpit error, kind of!  I tried
-installing MULTIPSK and got the "no sound card error" also.  Went
-into the Control Panel to see what was going on.  When I looked at
-sound input it said there was NO microphone plugged in.  Then the
-light came on and I remembered that you MUST have a microphone plugged
-in when using the Vista OS or it doesn't think there is a sound card in
-the computer!!!  Well this is my first encounter with Vista and
-how am I suppose to know or remember that little quark on an OS I've
-never used before??
-<br>
-
-Once I plugged a mic into the sound card input both programs worked
-just fine.
-<br>
-
-<b>Vista/Win7 requires</b> either a <b>microphone</b> or a <b>line-in</b>
-device actually plugged into the 8 mm audio jack before the sound
-driver reports that there is an audio capture device.
-<br>
+Executables for other NBEMS applications, such as flarq, flrig, flmsg,
+and flamp, may also be copied to that folder if they have been installed
+or obtained separately.
 
 \ref installing_on_windows_page "Return to Top of Page"
 <br>
