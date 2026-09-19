@@ -20,9 +20,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#define GCC_VERSION (__GNUC__ * 10000 \
-                     + __GNUC_MINOR__ * 100 \
-                     + __GNUC_PATCHLEVEL__)
 #include <FL/fl_draw.H>
 #include <FL/names.h>
 
@@ -30,9 +27,7 @@
 #include <iostream>
 #include <string>
 
-#if GCC_VERSION > 40201
-#	include <cstdint>
-#endif
+#include <cstdint>
 
 #include <string.h>
 
