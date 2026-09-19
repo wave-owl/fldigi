@@ -54,30 +54,9 @@ extern "C" {
 #define WCLAMP(x, low, high) (((x)>(high))?(low):(((x)<(low))?(high):(x)))
 
 #ifdef __GNUC__
-#    if (__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 1)
-#        define full_memory_barrier() __sync_synchronize()
-#        define read_memory_barrier() full_memory_barrier()
-#        define write_memory_barrier() full_memory_barrier()
-#    elif defined(__i386__) || defined(__i486__) || defined(__i586__) || defined(__i686__) || defined(__x86_64__)
-#        define full_memory_barrier() asm volatile ("lock; addl $0,0(%%esp)":::"memory")
-#        define read_memory_barrier() full_memory_barrier()
-#        define write_memory_barrier() full_memory_barrier()
-/*
- These would be faster on SSE2-capable processors:
-#        define full_memory_barrier() asm volatile ("mfence":::"memory")
-#        define read_memory_barrier() asm volatile ("lfence":::"memory")
-#        define write_memory_barrier() asm volatile ("sfence":::"memory")
-*/
-#    elif defined(__ppc__) || defined(__powerpc__) || defined(__PPC__)
-#        define full_memory_barrier() asm volatile("sync":::"memory")
-#        define read_memory_barrier() full_memory_barrier()
-#        define write_memory_barrier() full_memory_barrier()
-#    else
-#        warning Memory barriers not defined on this system
-#        define full_memory_barrier() ((void)0)
-#        define read_memory_barrier() full_memory_barrier()
-#        define write_memory_barrier() full_memory_barrier()
-#    endif
+#    define full_memory_barrier() __sync_synchronize()
+#    define read_memory_barrier() full_memory_barrier()
+#    define write_memory_barrier() full_memory_barrier()
 #else
 #    warning Memory barriers not defined on this system
 #    define full_memory_barrier() ((void)0)
@@ -86,7 +65,7 @@ extern "C" {
 #endif
 
 /* http://gcc.gnu.org/onlinedocs/gcc/Function-Attributes.html */
-#if defined(__GNUC__) && (__GNUC__ >= 3)
+#ifdef __GNUC__
 #    define likely(x)    __builtin_expect (!!(x), 1)
 #    define unlikely(x)  __builtin_expect (!!(x), 0)
 #    define used__       __attribute__ ((__used__))
@@ -120,7 +99,7 @@ extern "C" {
 #    define format__(type_, index_, first_)
 #endif
 
-#if defined(__GNUC__) && ((__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 3))
+#ifdef __GNUC__
 #    define hot__        __attribute__ ((__hot__))
 #    define cold__       __attribute__ ((__cold__))
 #else

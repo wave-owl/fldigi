@@ -106,7 +106,8 @@ private:
 	} while (0)
 
 unused__ static unsigned int log_source_ = debug::LOG_OTHER;
-#if defined(__GNUC__) && (__GNUC__ >= 3)
+
+#ifdef __GNUC__
 #  define LOG_FILE_SOURCE(source__)						\
 	__attribute__((constructor))						\
 	static void log_set_source_(void) { log_source_ = source__; }
