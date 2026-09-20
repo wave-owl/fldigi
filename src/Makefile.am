@@ -968,6 +968,8 @@ EXTRA_DIST = \
 	$(srcdir)/../VERSION \
 	$(srcdir)/../build-autotools.sh \
 	$(srcdir)/../build-cmake.sh \
+	$(srcdir)/../README-DEVELOPERS.md \
+	$(srcdir)/../README-USERS.md \
 	$(srcdir)/../scripts/mkappbundle.sh \
 	$(srcdir)/../scripts/mkhamlibstatic.sh \
 	$(srcdir)/../scripts/mknsisinst.sh \
