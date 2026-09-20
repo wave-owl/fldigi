@@ -968,8 +968,6 @@ EXTRA_DIST = \
 	$(srcdir)/../scripts/mkappbundle.sh \
 	$(srcdir)/../scripts/mkhamlibstatic.sh \
 	$(srcdir)/../scripts/mknsisinst.sh \
-	$(srcdir)/../scripts/buildmxe.sh \
-	$(srcdir)/../scripts/builddist.sh \
 	$(srcdir)/../scripts/tests/cr.sh \
 	$(srcdir)/../scripts/tests/config-h.sh \
 	$(srcdir)/../data/fldigi-psk.png \
