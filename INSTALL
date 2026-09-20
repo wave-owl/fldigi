@@ -1,49 +1,158 @@
 Installation Instructions for fldigi
-************************************
+************************************           Revised 20 September 2026
 
-To compile fldigi you will need:
+Build Requirements
+==================
 
-  * A recent C++ compiler.  The GNU C++ compilers in the 4.x series are
-    known to work.
+fldigi requires:
 
-  * Version 1.3.4 or later of the Fast Light Tool Kit (FLTK), with its
-    development library and headers.  FLTK's multi-threading support is
-    required.
+  * A C++11-capable C++ compiler.
 
-  * The samplerate (a.k.a. secret rabbit code) library.
+  * Version 1.4 or later of the Fast Light Tool Kit (FLTK), including
+    its development libraries and headers.  FLTK multi-threading support
+    is required.
+
+  * The samplerate (Secret Rabbit Code) library.
 
   * The PNG library.
 
-  * The libxft library.
+  * The libxft library on systems using X11.
 
-  * The libudev-dev library.
+  * The libudev development library on Linux.
 
-You should read and follow the instructions for building on various OS
-platforms that are on the fldigi wiki:
+Additional libraries may be required for optional fldigi features.
 
-https://sourceforge.net/p/fldigi/wiki/Home/
+fldigi supports both Autotools and CMake build systems.  The source tree
+contains build scripts for the normal Linux build and for cross-compiling
+a 64-bit Windows version using MXE.
 
-The simplest way to compile this package on Linux is:
 
-  1. `cd' to the directory containing the package's source code and type
-     `./configure' to configure the package for your system.
+Autotools Build
+===============
 
-     Running `configure' might take a while.  While running, it prints
-     some messages telling which features it is checking for.
+The supplied build-autotools.sh script performs an out-of-tree Autotools
+build.
 
-  2. Type `make' to compile the package.
+For a native Linux build:
 
-  3. Optionally, type `make check' to run any self-tests that come with
-     the package.
+    ./build-autotools.sh linux
 
-  4. Type `make install' to install the programs and any data files and
-     documentation.
+To remove the previous build directory and perform a clean build:
 
-  5. You can remove the program binaries and object files from the
-     source code directory by typing `make clean'.  To also remove the
-     files that `configure' created (so you can compile the package for
-     a different kind of computer), type `make distclean'.  There is
-     also a `make maintainer-clean' target, but that is intended mainly
-     for the package's developers.  If you use it, you may have to get
-     all sorts of other programs in order to regenerate files that came
-     with the distribution.
+    ./build-autotools.sh linux --clean
+
+The resulting build is placed in:
+
+    build/autotools-linux
+
+For a 64-bit Windows cross-build using MXE:
+
+    ./build-autotools.sh mxe
+
+or, for a clean build:
+
+    ./build-autotools.sh mxe --clean
+
+The MXE build uses the x86_64-w64-mingw32.static target and also creates
+the NSIS Windows installer.
+
+
+CMake Build
+===========
+
+The supplied build-cmake.sh script provides the corresponding CMake
+build.
+
+For a native Linux build:
+
+    ./build-cmake.sh linux
+
+For a clean native Linux build:
+
+    ./build-cmake.sh linux --clean
+
+The resulting build is placed in:
+
+    build/cmake-linux
+
+For a 64-bit Windows cross-build using MXE:
+
+    ./build-cmake.sh mxe
+
+or:
+
+    ./build-cmake.sh mxe --clean
+
+The resulting build is placed in:
+
+    build/cmake-mxe
+
+The MXE CMake build also creates the NSIS Windows installer.
+
+
+Manual Autotools Build
+======================
+
+Developers who prefer to invoke Autotools directly may use the normal
+Autotools procedure.  An out-of-tree build is recommended.
+
+First prepare the build system if necessary:
+
+    autoreconf -fi
+
+Then create and enter a build directory:
+
+    mkdir -p build/autotools-linux
+    cd build/autotools-linux
+
+Configure using the source tree:
+
+    ../../configure
+
+Compile:
+
+    make -j$(nproc)
+
+Optionally run the supplied tests:
+
+    make check
+
+Install using the usual target:
+
+    make install
+
+The installation prefix and other build options may be selected using
+the normal configure options.  Run:
+
+    ../../configure --help
+
+for the available options.
+
+
+Distribution Testing
+====================
+
+Maintainers should use:
+
+    make distcheck
+
+before preparing a source release.
+
+distcheck creates a source archive and verifies that the distributed
+source can be configured, built, tested, installed, and uninstalled
+without depending on files omitted from the distribution.
+
+
+Build Tree Notes
+================
+
+The Autotools and CMake builds use separate build directories under
+build/.  This permits multiple build configurations to coexist.
+
+CMake generates its own config.h in the build tree.  The CMake build is
+arranged so that this generated configuration takes precedence over a
+config.h that may have been generated in the source tree by Autotools.
+
+The current Windows build target is 64-bit Windows.  The former Cygwin
+build path and older 32-bit Windows build assumptions are no longer
+supported.
