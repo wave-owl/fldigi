@@ -964,7 +964,10 @@ EXTRA_fldigi_SOURCES += \
 
 # Additional files that we distribute
 EXTRA_DIST = \
-    $(srcdir)/../build-aux/config.rpath \
+	$(srcdir)/../build-aux/config.rpath \
+	$(srcdir)/../VERSION \
+	$(srcdir)/../build-autotools.sh \
+	$(srcdir)/../build-cmake.sh \
 	$(srcdir)/../scripts/mkappbundle.sh \
 	$(srcdir)/../scripts/mkhamlibstatic.sh \
 	$(srcdir)/../scripts/mknsisinst.sh \
