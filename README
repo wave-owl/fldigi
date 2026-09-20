@@ -1,3 +1,6 @@
+Fldigi Readme
+*************                                  Revised 20 September 2026
+
 Fldigi is a software modem for Amateur Radio use. It is a sound card based
 program that is used for both transmitting and receiving data in any of the
 following modes:
@@ -18,9 +21,9 @@ Throb and ThrobX     1, 2, and 4
 WWV                  receive only - calibrate your sound card to WWV
 Frequency Analysis   receive only - measure the frequency of a carrier
 
-Fldigi can also control a transceiver using Hamlib or RigCAT I/O, perform online
-or cdrom QRZ queries, log QSOs with the built-in logbook or Xlog, and send
-reception reports to the PSK Automatic Propagation Reporter.
+Fldigi can also control a transceiver using Hamlib or RigCAT I/O, perform
+online or cdrom QRZ queries, log QSOs with the built-in logbook or Xlog,
+and send reception reports to the PSK Automatic Propagation Reporter.
 
 If the Portaudio library is available then fldigi can process audio for
   . alert outputs for various event announcements
@@ -30,33 +33,37 @@ The latest version can always be found at:
 
   https://www.w1hkj.org/
 
-Visit this page for extensive documentation and an archive of XML files for
-transceivers supported by RigCAT.
+Visit this page for extensive documentation and an archive of XML files
+for transceivers supported by RigCAT.
 
 The wiki page contains FAQs and HOWTOs, as well as links to all Fldigi
 resources:
 
-  https://fedorahosted.org/fldigi/
+  https://sourceforge.net/p/fldigi/wiki/Home/
 
 The GIT repository can be found at:
 
   https://sourceforge.net/p/fldigi/fldigi/ci/master/tree/
 
-For support, news and updates, join one or more of the following mailing lists
-and Yahoo groups.  Stable releases are announced to all lists and groups; test
-(alpha) releases are announced to fldigi-alpha and fldigi-announce.
+For support, news and updates, join one or more of the following mailing
+lists on groups.io.  Stable releases are announced to all lists and groups.
+Test (alpha) releases are announced to fldigi-alpha and fldigi-announce.
 
   * linuxham group
-    General discussion on fldigi, related software and other ham radio topics
-    https://groups.io/g/linuxham
+    General discussion on fldigi, related software and other ham radio
+    topics
+
+      https://groups.io/g/linuxham
 
   * win-fldigi group
     For Windows users of fldigi
-    https://groups.io/g/winfldigi
+
+      https://groups.io/g/winfldigi
 
   * NBEMSham group
     Special focus on NBEMS operation
-    https://groups.io/g/nbems
+
+      https://groups.io/g/nbems
 
   * fldigi-alpha list
     Discussion of fldigi testing and related subjects
@@ -65,3 +72,24 @@ and Yahoo groups.  Stable releases are announced to all lists and groups; test
   * fldigi-devel list
     Fldigi development topics
     https://sourceforge.net/p/fldigi/mailman/fldigi-devel/
+
+BUILDING FLDIGI
+***************
+
+fldigi requires a C++11-capable compiler and FLTK 1.4 or later.
+
+Both Autotools and CMake builds are supported.  The source distribution
+includes:
+
+    build-autotools.sh
+    build-cmake.sh
+
+Each script supports native Linux builds and 64-bit Windows cross-builds
+using MXE.  See INSTALL for build requirements and detailed instructions.
+
+The current Windows build is a native 64-bit Windows application.  The
+former Cygwin build path is no longer supported.
+
+flarq is maintained as a separate application and is no longer built or
+distributed as part of fldigi.  fldigi retains its ARQ interface for use
+with compatible external applications.
