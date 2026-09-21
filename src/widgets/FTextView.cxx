@@ -384,7 +384,8 @@ char* FTextBase::get_word(int x, int y, const char* nwchars, int n, bool ontext)
 	int start, end;
 
 	if (tbuf->selected()) {
-		if (ontext && (p < start || p >= end) && tbuf->selection_position(&start, &end))
+		if (ontext && tbuf->selection_position(&start, &end) &&
+		    (p < start || p >= end))
 			return 0;
 		else
 			return tbuf->selection_text();
