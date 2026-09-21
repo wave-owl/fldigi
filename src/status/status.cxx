@@ -1249,7 +1249,6 @@ void status::initLastState()
 	if(override_data_io_enabled != DISABLED_IO) {
 		data_io_enabled = override_data_io_enabled;
 		progdefaults.data_io_enabled = data_io_enabled;
-		data_io_enabled = data_io_enabled;
 	}
 
 	if(data_io_enabled == KISS_IO) {
