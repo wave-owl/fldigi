@@ -944,8 +944,11 @@ static bool notify_is_dup(notify_t& n, const char* str, const regmatch_t* sub, s
 	if ((i = n.last_seen.find(dupstr)) != n.last_seen.end()) {
 		const notify_dup_t& prev = i->second;
 		is_dup = (cur.when - prev.when < n.dup.when);
-		if (n.event == NOTIFY_EVENT_RSID)
-			is_dup = is_dup && ::llabs(cur.freq - prev.freq) <= ceil(RSID_PRECISION);
+		if (n.event == NOTIFY_EVENT_RSID) {
+			unsigned long long freq_diff =
+				cur.freq > prev.freq ? cur.freq - prev.freq : prev.freq - cur.freq;
+			is_dup = is_dup && freq_diff <= ceil(RSID_PRECISION);
+		}
 		if (n.dup.band)
 			is_dup = is_dup && cur.band == prev.band;
 		if (n.dup.mode)
