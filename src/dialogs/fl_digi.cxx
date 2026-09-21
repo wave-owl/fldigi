@@ -5489,7 +5489,7 @@ void UI_select(std::string parent)
 				break;
 			case LOG_ARR:
 				inpCall = inpCall1;
-				inpName = inpName;
+				inpName = inpName1;
 				inp_ARR_check = inp_ARR_check1;
 				inpXchgIn = inp_ARR_XchgIn1;
 				gARR->show();
