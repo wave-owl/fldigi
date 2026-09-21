@@ -191,9 +191,8 @@ AC_FLDIGI_OSS
 # Set ac_cv_png to yes/no    (not used)
 # Define USE_PNG in config.h (as above)
 # Substitute PNG_CFLAGS and PNG_LIBS in Makefile
-if test "x$ac_cv_want_fldigi" = "xyes"; then
-    AC_FLDIGI_PKG_CHECK([png], [libpng >= 1.2.8], [no], [no])
-fi
+AC_FLDIGI_PKG_CHECK([png], [libpng >= 1.2.8], [no], [no])
+PNG_LIBS=`$PKG_CONFIG --static --libs "libpng >= 1.2.8"`
 
 ### libgpiod
 # Set ac_cv_libgpiod to yes/no
