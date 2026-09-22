@@ -24,7 +24,6 @@ AC_ARG_ENABLE([mac-universal], AS_HELP_STRING([--enable-mac-universal],
               [ac_cv_mac_universal=no])
 
 if test "x$target_darwin" = "xyes" && test "x$ac_cv_mac_universal" = "xyes"; then
-    mac_minversion="-mmacosx-version-min=10.4"
     case "$target_os" in
       darwin8*)
         mac_arches="-arch i386 -arch ppc"
@@ -47,7 +46,7 @@ if test "x$target_darwin" = "xyes" && test "x$ac_cv_mac_universal" = "xyes"; the
         mac_sysroot=""
         ;;
     esac
-    MAC_UNIVERSAL_CFLAGS="$mac_arches $mac_sysroot $mac_minversion"
+    MAC_UNIVERSAL_CFLAGS="$mac_arches $mac_sysroot"
     MAC_UNIVERSAL_LDFLAGS="$mac_arches"
 fi
 AC_SUBST([MAC_UNIVERSAL_CFLAGS])
