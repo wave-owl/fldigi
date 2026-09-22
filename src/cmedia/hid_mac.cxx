@@ -22,6 +22,7 @@
  Tested on both Intel and M1 architecture
 ***********************************************************************/
 
+#include <stdio.h>
 #include <iostream>
 
 #include "hidapi.h"
@@ -591,7 +592,7 @@ hid_device * hid_open_path(std::string path)
 
 		/* Create the Run Loop Mode for this device.
 		   printing the reference seems to work. */
-		sprintf(str, "HIDAPI_%p", dev->device_handle);
+		snprintf(str, sizeof(str), "HIDAPI_%p", dev->device_handle);
 		dev->run_loop_mode =
 			CFStringCreateWithCString(NULL, str, kCFStringEncodingASCII);
 
