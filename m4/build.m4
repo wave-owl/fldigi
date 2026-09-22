@@ -38,11 +38,6 @@ $INTL_CFLAGS $PTW32_CFLAGS $BFD_CFLAGS -pipe -Wall -fexceptions $OPT_CFLAGS $DEB
     FLDIGI_BUILD_CXXFLAGS="$FLDIGI_BUILD_CXXFLAGS -I\$(srcdir)/xmlrpcpp"
   fi
 
-  if test "x$target_darwin" = "xyes"; then
-    FLDIGI_BUILD_CXXFLAGS="$FLDIGI_BUILD_CXXFLAGS -fno-stack-check -mmacosx-version-min=10.11"
-    FLDIGI_BUILD_CPPFLAGS="$FLDIGI_BUILD_CPPFLAGS -fno-stack-check -mmacosx-version-min=10.11"
-  fi
-
 # LDFLAGS
   FLDIGI_BUILD_LDFLAGS="$MAC_UNIVERSAL_LDFLAGS"
   if test "x$target_mingw32" = "xyes"; then
