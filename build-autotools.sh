@@ -10,7 +10,7 @@ BUILDBASE="$TOPDIR/build"
 
 usage()
 {
-	echo "usage: $0 linux|mxe [--clean]"
+	echo "usage: $0 linux|mxe [--clean] [--install]"
 	exit 1
 }
 
@@ -20,12 +20,30 @@ if [ -f "$TOPDIR/config.status" ]; then
 	exit 1
 fi
 
-if [ $# -lt 1 ] || [ $# -gt 2 ]; then
+if [ $# -lt 1 ]; then
 	usage
 fi
 
 MODE="$1"
+shift
+
 CLEAN=0
+INSTALL=0
+
+while [ $# -gt 0 ]; do
+	case "$1" in
+	--clean)
+		CLEAN=1
+		;;
+	--install)
+		INSTALL=1
+		;;
+	*)
+		usage
+		;;
+	esac
+	shift
+done
 
 if [ $# -eq 2 ]; then
 	if [ "$2" != "--clean" ]; then
@@ -48,6 +66,11 @@ mxe)
 	;;
 esac
 
+if [ "$MODE" = "mxe" ] && [ "$INSTALL" -eq 1 ]; then
+	echo "Error: --install is only supported for the native Linux build."
+	exit 1
+fi
+
 cd "$TOPDIR"
 
 autoreconf -fi
@@ -67,7 +90,20 @@ linux)
 		"$TOPDIR/configure"
 	fi
 
-	make -j"$(nproc)"
+make -j"$(nproc)"
+
+if [ "$INSTALL" -eq 1 ]; then
+	if [ "$(id -u)" -eq 0 ]; then
+		make install
+	elif command -v sudo >/dev/null 2>&1; then
+		echo
+		echo "Installing fldigi to /usr/local requires administrator privileges."
+		sudo make install
+	else
+		echo "Error: installation requires administrator privileges, but sudo was not found."
+		exit 1
+	fi
+fi
 	;;
 
 mxe)
