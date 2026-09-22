@@ -940,11 +940,6 @@ void test_MAC_COMports() {
 	inpRIGdev->clear();
 	inpXmlRigDevice->clear();
 
-	const char* tty_fmt[] = {
-		"/dev/cu.*",
-		"/dev/tty.*"
-	};
-
 // Create a matching dictionary: 
 //   This dictionary specifies the criteria for the serial ports you are 
 //   looking for. You typically match on kIOSerialBSDServiceValue.
