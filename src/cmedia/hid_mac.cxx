@@ -568,7 +568,7 @@ hid_device * hid_open_path(std::string path)
 		return NULL;
 
 	/* Get the IORegistry entry for the given path */
-	entry = IORegistryEntryFromPath(kIOMasterPortDefault, path.c_str());
+	entry = IORegistryEntryFromPath(kIOMainPortDefault, path.c_str());
 	if (entry == MACH_PORT_NULL) {
 		/* Path wasn't valid (maybe device was removed?) */
 		goto return_error;

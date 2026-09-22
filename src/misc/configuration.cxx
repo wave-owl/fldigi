@@ -956,7 +956,7 @@ void test_MAC_COMports() {
 
 	io_iterator_t serialPortIterator;
 	kern_return_t kernResult = IOServiceGetMatchingServices
-									(kIOMasterPortDefault,
+									(kIOMainPortDefault,
 									matchingDict,
 									&serialPortIterator);
 	if (KERN_SUCCESS != kernResult) {
