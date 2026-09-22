@@ -313,6 +313,11 @@ review, and further build-system simplification, but these should be
 treated as separate campaigns rather than folded into the completed
 compatibility work.
 
+The AsciiDoc Python 3.12 warnings are not fldigi warnings; AsciiDoc
+upstream fixed the table-separator escape handling by changing the
+constructed literal to a raw string. This fix is not included in
+some recent distributions, including Linux Mint 22.3.
+
 ## Current baseline
 
 At the end of this modernization phase:
