@@ -9,7 +9,7 @@ $(PKG)_CHECKSUM := eede1fb2b8e9c2e581e77082e15252145855c79aad30070ee3b24aabe2f92
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_MAJOR    := $(word 1,$(subst -, ,$($(PKG)_VERSION)))
 $(PKG)_FILE     := $($(PKG)_SUBDIR)-source.tar.gz
-$(PKG)_URL      := https://fltk.org/pub/fltk/$($(PKG)_MAJOR)/$($(PKG)_FILE)
+$(PKG)_URL      := https://github.com/fltk/fltk/releases/download/release-$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := cc jpeg libpng pthreads zlib
 
 define $(PKG)_UPDATE
