@@ -121,10 +121,21 @@ mxe)
 
 	"$PREFIX/bin/$TARGET-strip" src/fldigi.exe
 
-	make nsisinst
+	if command -v makensis >/dev/null 2>&1; then
+		make nsisinst
 
-	mv src/*setup.exe "$TOPDIR/"
-	ls -l "$TOPDIR/"*setup.exe
+		mv src/*setup.exe "$TOPDIR/"
+
+		echo
+		echo "Windows installer:"
+		ls -lh "$TOPDIR/"*setup.exe
+	else
+		echo
+		echo "NSIS not installed; skipping Windows installer creation."
+		echo "Cross-compiled executable:"
+		ls -lh src/fldigi.exe
+	fi
 	;;
+
 esac
 
