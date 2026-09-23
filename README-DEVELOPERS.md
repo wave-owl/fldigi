@@ -280,6 +280,12 @@ do not construct a host `PKG_CONFIG_PATH` to work around missing target
 packages.  Required libraries should be installed for the correct MXE
 target.
 
+MXE dependency versions maintained by fldigi are intentionally pinned to
+known-good upstream releases. setup-mxe.sh does not automatically adopt
+newer releases or generate replacement checksums. Version and checksum
+updates are maintainer actions and should be made only after the new
+dependency has been tested with fldigi.
+
 If MXE is installed somewhere other than `~/mxe`, specify its directory:
 
 ``` sh
