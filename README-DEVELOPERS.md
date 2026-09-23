@@ -218,19 +218,111 @@ treated as sufficient validation for build-system changes.
 
 ## MXE cross-compilation
 
-The CMake MXE build targets:
+The maintained Windows cross-build target is:
 
 ``` text
 x86_64-w64-mingw32.static
 ```
 
-The toolchain uses the MXE C and C++ compilers, `windres`, the MXE
+The MXE toolchain uses the MXE C and C++ compilers, `windres`, the MXE
 target root for libraries/includes/packages, and the target-specific
 `pkg-config`.
 
-The important maintenance principle is that CMake should discover target
-libraries from the MXE environment and must not accidentally consume
-host Linux configuration or libraries.
+The important maintenance principle is that the build must discover
+target libraries from the MXE environment and must not accidentally
+consume host Linux configuration or libraries.
+
+### Preparing MXE
+
+The current MXE distribution does not necessarily provide the versions
+of FLTK and Hamlib required by fldigi.  fldigi therefore provides the
+MXE support files in:
+
+``` text
+scripts/mxe/
+```
+
+These currently provide FLTK 1.4.5 and Hamlib 4.7.2, together with the
+Hamlib patch and test source used by the fldigi MXE build.
+
+The procedure has been tested on 64-bit Linux Mint 22.3.
+
+Clone MXE in the normal location:
+
+``` sh
+cd ~
+git clone https://github.com/mxe/mxe.git
+```
+
+Then, from the fldigi source tree, prepare MXE and build the required
+target libraries:
+
+``` sh
+./scripts/mxe/setup-mxe.sh
+```
+
+The script installs the fldigi MXE support files into `~/mxe/src` and
+builds the following explicit MXE packages for
+`x86_64-w64-mingw32.static`:
+
+``` text
+fltk
+hamlib
+libsamplerate
+libsndfile
+portaudio
+```
+
+MXE resolves and builds their subordinate dependencies.
+
+Do not copy `pkg-config` `.pc` files between MXE target directories and
+do not construct a host `PKG_CONFIG_PATH` to work around missing target
+packages.  Required libraries should be installed for the correct MXE
+target.
+
+If MXE is installed somewhere other than `~/mxe`, specify its directory:
+
+``` sh
+./scripts/mxe/setup-mxe.sh /path/to/mxe
+```
+
+### Building fldigi with Autotools
+
+After the MXE dependencies have been built:
+
+``` sh
+./build-autotools.sh mxe --clean
+```
+
+This performs an out-of-tree Autotools cross-build using the
+`x86_64-w64-mingw32.static` toolchain and produces `fldigi.exe`.
+
+NSIS is optional.  If the host `makensis` program is available, the
+build script also creates the Windows installer:
+
+``` text
+fldigi-<version>_setup.exe
+```
+
+On Debian-derived systems such as Linux Mint, NSIS can be installed
+with:
+
+``` sh
+sudo apt install nsis
+```
+
+If NSIS is not installed, installer creation is skipped and the
+cross-compiled `fldigi.exe` remains a successful build result.
+
+### CMake MXE build
+
+CMake also supports the same `x86_64-w64-mingw32.static` target.  It
+uses the MXE C and C++ compilers, `windres`, target root, and
+target-specific `pkg-config`.
+
+As with the Autotools build, CMake must discover libraries from the MXE
+target environment and must not consume host Linux libraries or
+configuration.
 
 ## Hamlib
 
