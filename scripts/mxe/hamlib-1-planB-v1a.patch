@@ -1,0 +1,678 @@
+diff --git a/rigs/dummy/flrig.c b/rigs/dummy/flrig.c
+index 218048e..372b849 100644
+--- a/rigs/dummy/flrig.c
++++ b/rigs/dummy/flrig.c
+@@ -24,6 +24,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>             /* String function definitions */
++#include <strings.h>            /* strncasecmp */
+ #include <math.h>
+ 
+ #include "hamlib/rig.h"
+@@ -455,83 +456,157 @@ static char *xml_parse(char *xml, char *value, int value_len)
+ */
+ static int read_transaction(RIG *rig, char *xml, int xml_len)
+ {
+-    int retval;
+-    int retry;
+-    char *delims;
+-    char *terminator = "</methodResponse>";
++    static const char terminator[] = "</methodResponse>";
++    static const char content_length_name[] = "Content-Length:";
++    hamlib_port_t *rp = RIGPORT(rig);
++    int content_length = -1;
++    int header_lines = 0;
++    int header_done = 0;
++    int first_line = 1;
+ 
+     ENTERFUNC;
+ 
+-    retry = 2;
+-    delims = "\n";
+     xml[0] = 0;
+ 
+-    do
++    /*
++     * Read the FLRig HTTP response using its HTTP message boundary.
++     *
++     * The legacy code read newline-delimited pieces until it happened to
++     * encounter </methodResponse>.  On a persistent TCP stream that makes
++     * completion dependent on packet/line arrival timing.  Instead, consume
++     * the HTTP headers, obtain Content-Length, and then read exactly that many
++     * XML body bytes.
++     */
++    while (header_lines++ < 64)
+     {
+-        char tmp_buf[MAXXMLLEN];        // plenty big for expected flrig responses hopefully
++        char line[1024];
++        int len;
++        size_t used;
++
++        len = read_string(rp, (unsigned char *)line, sizeof(line),
++                          "\n", 1, 0, 1);
+ 
+-        if (retry < 2)
++        if (len < 0)
+         {
+-            rig_debug(RIG_DEBUG_WARN, "%s: retry needed? retry=%d\n", __func__, retry);
++            rig_debug(RIG_DEBUG_ERR, "%s: header read failed: %s\n",
++                      __func__, rigerror(len));
++            RETURNFUNC(len);
+         }
+ 
+-        rig_debug(RIG_DEBUG_TRACE, "%s: before read_string\n", __func__);
+-        int len = read_string(RIGPORT(rig), (unsigned char *) tmp_buf, sizeof(tmp_buf),
+-                              delims,
+-                              strlen(delims), 0, 1);
+-//                              "</methodResponse>", 17,0,1);
+-        rig_debug(RIG_DEBUG_TRACE, "%s: string='%s'\n", __func__, tmp_buf);
+-
+-        // if our first response we should see the HTTP header
+-        if (strlen(xml) == 0 && strstr(tmp_buf, "HTTP/1.1 200 OK") == NULL)
++        if (len == 0)
+         {
+-            rig_debug(RIG_DEBUG_ERR, "%s: Expected 'HTTP/1.1 200 OK', got '%s'\n", __func__,
+-                      tmp_buf);
+-            continue; // we'll try again
++            rig_debug(RIG_DEBUG_ERR, "%s: zero-length HTTP header read\n",
++                      __func__);
++            RETURNFUNC(-RIG_EPROTO);
+         }
+ 
+-        if (len > 0) { retry = 3; }
++        rig_debug(RIG_DEBUG_TRACE, "%s: header='%s'\n", __func__, line);
+ 
+-        if (len <= 0)
++        if (first_line)
+         {
+-            rig_debug(RIG_DEBUG_ERR, "%s: read_string error=%d\n", __func__, len);
+-            continue;
++            first_line = 0;
++
++            if (strstr(line, " 200 OK") == NULL)
++            {
++                rig_debug(RIG_DEBUG_ERR,
++                          "%s: expected HTTP 200 response, got '%s'\n",
++                          __func__, line);
++                RETURNFUNC(-RIG_EPROTO);
++            }
+         }
+ 
+-        if (strlen(xml) + strlen(tmp_buf) < xml_len - 1)
++        if (strncasecmp(line, content_length_name,
++                        sizeof(content_length_name) - 1) == 0)
+         {
+-            strncat(xml, tmp_buf, xml_len - 1);
++            char *end = NULL;
++            long n = strtol(line + sizeof(content_length_name) - 1, &end, 10);
++
++            if (end == line + sizeof(content_length_name) - 1 ||
++                    n < 0 || n >= xml_len)
++            {
++                rig_debug(RIG_DEBUG_ERR,
++                          "%s: invalid Content-Length header '%s'\n",
++                          __func__, line);
++                RETURNFUNC(-RIG_EPROTO);
++            }
++
++            content_length = (int)n;
+         }
+-        else
++
++        used = strlen(xml);
++
++        if (used + (size_t)len >= (size_t)xml_len)
+         {
+             rig_debug(RIG_DEBUG_ERR,
+-                      "%s: xml buffer overflow!!\nTrying to add len=%d\nTo len=%d\n", __func__,
+-                      (int)strlen(tmp_buf), (int)strlen(xml));
++                      "%s: HTTP header exceeds XML buffer\n", __func__);
+             RETURNFUNC(-RIG_EPROTO);
+         }
++
++        memcpy(xml + used, line, (size_t)len);
++        xml[used + len] = 0;
++
++        if (strcmp(line, "\r\n") == 0 || strcmp(line, "\n") == 0)
++        {
++            header_done = 1;
++            break;
++        }
+     }
+-    while (retry-- > 0 && strstr(xml, terminator) == NULL);
+ 
+-    if (retry == 0)
++    if (!header_done)
+     {
+-        rig_debug(RIG_DEBUG_WARN, "%s: retry timeout\n", __func__);
+-        RETURNFUNC(-RIG_ETIMEOUT);
++        rig_debug(RIG_DEBUG_ERR, "%s: HTTP header terminator not found\n",
++                  __func__);
++        RETURNFUNC(-RIG_EPROTO);
+     }
+ 
+-    if (strstr(xml, terminator))
++    if (content_length < 0)
+     {
+-        rig_debug(RIG_DEBUG_TRACE, "%s: got %s\n", __func__, terminator);
+-        // Slow down just a bit -- not sure this is needed anymore but not a big deal here
+-        // hl_usleep(2 * 1000); // try without this
+-        retval = RIG_OK;
++        rig_debug(RIG_DEBUG_ERR,
++                  "%s: no Content-Length in HTTP response\n", __func__);
++        RETURNFUNC(-RIG_EPROTO);
+     }
+-    else
++
+     {
+-        rig_debug(RIG_DEBUG_VERBOSE, "%s: did not get %s\n", __func__, terminator);
+-        retval = -(101 + RIG_EPROTO);
++        size_t used = strlen(xml);
++        int len;
++
++        if (used + (size_t)content_length >= (size_t)xml_len)
++        {
++            rig_debug(RIG_DEBUG_ERR,
++                      "%s: HTTP body length %d exceeds XML buffer\n",
++                      __func__, content_length);
++            RETURNFUNC(-RIG_EPROTO);
++        }
++
++        len = read_block(rp, (unsigned char *)xml + used,
++                         (size_t)content_length);
++
++        if (len < 0)
++        {
++            rig_debug(RIG_DEBUG_ERR, "%s: XML body read failed: %s\n",
++                      __func__, rigerror(len));
++            RETURNFUNC(len);
++        }
++
++        if (len != content_length)
++        {
++            rig_debug(RIG_DEBUG_ERR,
++                      "%s: short XML body: expected=%d received=%d\n",
++                      __func__, content_length, len);
++            RETURNFUNC(-RIG_EPROTO);
++        }
++
++        xml[used + len] = 0;
+     }
+ 
+-    RETURNFUNC(retval);
++    if (strstr(xml, terminator) == NULL)
++    {
++        rig_debug(RIG_DEBUG_ERR, "%s: incomplete XML-RPC response\n",
++                  __func__);
++        RETURNFUNC(-RIG_EPROTO);
++    }
++
++    RETURNFUNC(RIG_OK);
+ }
+ 
+ /*
+@@ -557,9 +632,12 @@ static int write_transaction(RIG *rig, char *xml, int xml_len)
+         RETURNFUNC(retval);
+     }
+ 
+-    // appears we can lose sync if we don't clear things out
+-    // shouldn't be anything for us now anyways
+-    rig_flush(rp);
++    /*
++     * read_transaction() now consumes the preceding HTTP response exactly
++     * through Content-Length.  Do not flush a persistent socket before every
++     * request; a receive flush can race late-arriving bytes and create a
++     * framing error of its own.
++     */
+ 
+     while (try-- >= 0 && retval != RIG_OK)
+         {
+@@ -579,6 +657,7 @@ static int flrig_transaction(RIG *rig, char *cmd, char *cmd_arg, char *value,
+ {
+     char xml[MAXXMLLEN];
+     int retry = 3;
++    int read_retval;
+ 
+     ENTERFUNC;
+     ELAPSED1;
+@@ -614,7 +693,20 @@ static int flrig_transaction(RIG *rig, char *cmd, char *cmd_arg, char *value,
+             hl_usleep(50 * 1000); // 50ms sleep if error
+         }
+ 
+-        read_transaction(rig, xml, sizeof(xml)); // this might time out -- that's OK
++        read_retval = read_transaction(rig, xml, sizeof(xml));
++
++        if (read_retval != RIG_OK)
++        {
++            /*
++             * Do not automatically replay the complete RPC.  The request may
++             * already have reached flrig; replaying a setter could perform
++             * PTT, frequency, or another side effect twice.
++             */
++            rig_debug(RIG_DEBUG_ERR, "%s: read_transaction error=%d\n",
++                      __func__, read_retval);
++            set_transaction_inactive(rig);
++            RETURNFUNC(read_retval);
++        }
+ 
+         // we get an unknown response if function does not exist
+         if (strstr(xml, "unknown")) { set_transaction_inactive(rig); RETURNFUNC(-RIG_ENAVAIL); }
+@@ -623,7 +715,13 @@ static int flrig_transaction(RIG *rig, char *cmd, char *cmd_arg, char *value,
+ 
+         if (value)
+         {
+-            xml_parse(xml, value, value_len);
++            if (xml_parse(xml, value, value_len) == NULL)
++            {
++                rig_debug(RIG_DEBUG_ERR,
++                          "%s: invalid HTTP/XML response\n", __func__);
++                set_transaction_inactive(rig);
++                RETURNFUNC(-RIG_EPROTO);
++            }
+         }
+     }
+     while (((value && strlen(value) == 0) || (strlen(xml) == 0))
+diff --git a/src/iofunc.c b/src/iofunc.c
+index 83f4ae7..6900670 100644
+--- a/src/iofunc.c
++++ b/src/iofunc.c
+@@ -35,6 +35,7 @@
+ #include "hamlib/config.h"
+ 
+ #include <string.h>  /* String function definitions */
++#include <stdlib.h>  /* getenv */
+ #include <unistd.h>  /* UNIX standard function definitions */
+ #include <fcntl.h>   /* File control definitions */
+ #include <errno.h>   /* Error number definitions */
+@@ -1124,17 +1125,37 @@ int HAMLIB_API write_block(hamlib_port_t *p, const unsigned char *txbuffer,
+     }
+     else
+     {
+-        ret = port_write(p, txbuffer, count);
++        size_t written = 0;
+ 
+-        if (ret != count)
++        /*
++         * Stream writes may complete partially.  Keep writing until the
++         * complete command has been accepted.
++         */
++        while (written < count)
+         {
++            ret = port_write(p, txbuffer + written, count - written);
++
++            if (ret > 0)
++            {
++                written += (size_t)ret;
++                continue;
++            }
++
++            if (ret < 0 && errno == EINTR)
++            {
++                continue;
++            }
++
++            if (ret < 0 && (errno == EAGAIN || errno == EWOULDBLOCK))
++            {
++                hl_usleep(1000);
++                continue;
++            }
++
+             rig_debug(RIG_DEBUG_ERR,
+-                      "%s():%d failed %d - %s\n",
+-                      __func__,
+-                      __LINE__,
+-                      ret,
++                      "%s():%d failed %d after %zu/%zu bytes - %s\n",
++                      __func__, __LINE__, ret, written, count,
+                       strerror(errno));
+-
+             return -RIG_EIO;
+         }
+     }
+@@ -1241,17 +1262,31 @@ static int read_block_generic(hamlib_port_t *p, unsigned char *rxbuffer,
+          * grab bytes from the rig
+          * The file descriptor must have been set up non blocking.
+          */
++        errno = 0;
+         rd_count = (int) port_read_generic(p, rxbuffer + total_count, count, direct);
+ 
+         if (rd_count < 0)
+         {
++            if (errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK)
++            {
++                continue;
++            }
++
+             rig_debug(RIG_DEBUG_ERR, "%s(): read failed, direct=%d - %s\n", __func__,
+                       direct, strerror(errno));
+             return -RIG_EIO;
+         }
+ 
++        if (rd_count == 0)
++        {
++            rig_debug(RIG_DEBUG_ERR,
++                      "%s(): peer closed connection after %d chars, direct=%d\n",
++                      __func__, total_count, direct);
++            return -RIG_EIO;
++        }
++
+         total_count += rd_count;
+-        count -= rd_count;
++        count -= (size_t)rd_count;
+     }
+ 
+     if (direct)
+@@ -1324,8 +1359,7 @@ static int read_string_generic(hamlib_port_t *p,
+ {
+     struct timeval start_time, end_time, elapsed_time;
+     int total_count = 0;
+-    int i = 0;
+-    static int minlen = 1; // dynamic minimum length of rig response data
++    short timeout_retries;
+ 
+     if (p != NULL && !p->asyncio && !direct)
+     {
+@@ -1333,33 +1367,37 @@ static int read_string_generic(hamlib_port_t *p,
+     }
+ 
+     rig_debug(RIG_DEBUG_CACHE, "%s called, rxmax=%d direct=%d, expected_len=%d\n",
+-              __func__,
+-              (int)rxmax, direct, expected_len);
++              __func__, (int)rxmax, direct, expected_len);
+ 
+     if (!p || !rxbuffer)
+     {
+-        rig_debug(RIG_DEBUG_ERR, "%s: error p=%p, rxbuffer=%p\n", __func__, p,
+-                  rxbuffer);
++        rig_debug(RIG_DEBUG_ERR, "%s: error p=%p, rxbuffer=%p\n",
++                  __func__, p, rxbuffer);
+         return -RIG_EINVAL;
+     }
+ 
+     if (rxmax < 1)
+     {
+-        rig_debug(RIG_DEBUG_ERR, "%s: error rxmax=%ld\n", __func__, (long)rxmax);
++        rig_debug(RIG_DEBUG_ERR, "%s: error rxmax=%ld\n",
++                  __func__, (long)rxmax);
+         return 0;
+     }
+ 
+-    /* Store the time of the read loop start */
++    /*
++     * Keep all receive state local to this call.  The previous static minlen
++     * was shared by unrelated transactions and could be driven to zero or a
++     * negative value.  Delimiter-oriented strings are intentionally read one
++     * byte at a time; block protocols continue to use read_block().
++     */
+     gettimeofday(&start_time, NULL);
+-
+     memset(rxbuffer, 0, rxmax);
++    timeout_retries = p->timeout_retry;
+ 
+-    short timeout_retries = p->timeout_retry;
+-
+-    while (total_count < rxmax - 1) // allow 1 byte for end-of-string
++    while ((size_t)total_count < rxmax - 1)
+     {
+-        ssize_t rd_count = 0;
+         int result;
++        ssize_t rd_count;
++
+         result = port_wait_for_data(p, direct);
+ 
+         if (result == -RIG_ETIMEOUT)
+@@ -1367,40 +1405,33 @@ static int read_string_generic(hamlib_port_t *p,
+             if (timeout_retries > 0)
+             {
+                 timeout_retries--;
+-                rig_debug(RIG_DEBUG_CACHE, "%s(%d): retrying read timeout %d/%d timeout=%d\n",
++                rig_debug(RIG_DEBUG_CACHE,
++                          "%s(%d): retrying read timeout %d/%d timeout=%d\n",
+                           __func__, __LINE__,
+-                          p->timeout_retry - timeout_retries, p->timeout_retry, p->timeout);
++                          p->timeout_retry - timeout_retries,
++                          p->timeout_retry, p->timeout);
+                 hl_usleep(10 * 1000);
+                 continue;
+             }
+ 
+-            // a timeout is a timeout no matter how many bytes
+-            //if (0 == total_count)
+-            {
+-                /* Record timeout time and calculate elapsed time */
+-                gettimeofday(&end_time, NULL);
+-                timersub(&end_time, &start_time, &elapsed_time);
+-
+-                if (direct)
+-                {
+-                    dump_hex((unsigned char *) rxbuffer, total_count);
+-                }
++            gettimeofday(&end_time, NULL);
++            timersub(&end_time, &start_time, &elapsed_time);
+ 
+-                if (!flush_flag)
+-                {
+-                    rig_debug(RIG_DEBUG_CACHE,
+-                              "%s(): Timed out %d.%03d seconds after %d chars, direct=%d\n",
+-                              __func__,
+-                              (int)elapsed_time.tv_sec,
+-                              (int)elapsed_time.tv_usec / 1000,
+-                              total_count,
+-                              direct);
+-                }
++            if (direct)
++            {
++                dump_hex(rxbuffer, total_count);
++            }
+ 
+-                return -RIG_ETIMEOUT;
++            if (!flush_flag)
++            {
++                rig_debug(RIG_DEBUG_CACHE,
++                          "%s(): Timed out %d.%03d seconds after %d chars, direct=%d\n",
++                          __func__, (int)elapsed_time.tv_sec,
++                          (int)elapsed_time.tv_usec / 1000,
++                          total_count, direct);
+             }
+ 
+-            break; /* return what we have read */
++            return -RIG_ETIMEOUT;
+         }
+ 
+         if (result < 0)
+@@ -1410,118 +1441,74 @@ static int read_string_generic(hamlib_port_t *p,
+                 dump_hex(rxbuffer, total_count);
+             }
+ 
+-            rig_debug(RIG_DEBUG_ERR, "%s(%d): I/O error after %d chars, direct=%d: %d\n",
++            rig_debug(RIG_DEBUG_ERR,
++                      "%s(%d): I/O error after %d chars, direct=%d: %d\n",
+                       __func__, __LINE__, total_count, direct, result);
+             return result;
+         }
+ 
+-        /*
+-         * read 1 character from the rig, (check if in stop set)
+-         * The file descriptor must have been set up non blocking.
+-         */
+-        do
+-        {
+-#if 0
+-#ifndef __MINGW32__
+-            // The ioctl works on Linux but not mingw
+-            int avail = 0;
+-            ioctl(p->fd, FIONREAD, &avail);
+-            //rig_debug(RIG_DEBUG_ERR, "xs: avail=%d expected_len=%d, minlen=%d, direct=%d\n", __func__, avail, expected_len, minlen, direct);
+-#endif
+-#endif
+-shortcut:
+-            rd_count = port_read_generic(p, &rxbuffer[total_count],
+-                                         expected_len == 1 ? 1 : minlen, direct);
+-//            rig_debug(RIG_DEBUG_VERBOSE, "%s: read %d bytes tot=%d\n", __func__, (int)rd_count, total_count);
+-            minlen -= rd_count;
++        errno = 0;
++        rd_count = port_read_generic(p, &rxbuffer[total_count], 1, direct);
+ 
+-            if (errno == EAGAIN)
++        if (rd_count < 0)
++        {
++            if (errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK)
+             {
+-                hl_usleep(5 * 1000);
+-//                rig_debug(RIG_DEBUG_WARN, "%s: port_read is busy? direct=%d\n", __func__,
+-//                          direct);
++                continue;
+             }
+ 
+-            // special read for FLRig
+-            if (stopset != NULL && strcmp(stopset, "</methodResponse>") == 0)
++            if (direct)
+             {
+-                if (strstr((char *)rxbuffer, stopset))
+-                {
+-                    HAMLIB_TRACE2;
+-                }
+-
+-                else
+-                {
+-                    HAMLIB_TRACE2;
+-                    goto shortcut;
+-                }
++                dump_hex(rxbuffer, total_count);
+             }
+ 
++            rig_debug(RIG_DEBUG_ERR,
++                      "%s(): read failed, direct=%d - %s\n",
++                      __func__, direct, strerror(errno));
++            return -RIG_EIO;
+         }
+ 
+-        while (++i < 10 && errno == EBUSY);   // 50ms should be enough
+-
+-        /* if we get 0 bytes or an error something is wrong */
+-        if (rd_count <= 0)
++        if (rd_count == 0)
+         {
+-            if (direct)
+-            {
+-                dump_hex((unsigned char *) rxbuffer, total_count);
+-            }
+-
+-            rig_debug(RIG_DEBUG_ERR, "%s(): read failed, direct=%d - %s\n", __func__,
+-                      direct, strerror(errno));
+-
++            rig_debug(RIG_DEBUG_ERR,
++                      "%s(): peer closed connection after %d chars, direct=%d\n",
++                      __func__, total_count, direct);
+             return -RIG_EIO;
+         }
+ 
+-        total_count += (int) rd_count;
+-
+-        if (total_count == rxmax) { break; }
++        total_count += (int)rd_count;
+ 
+-        if (stopset && memchr(stopset, rxbuffer[total_count - 1], stopset_len))
++        if (stopset &&
++            memchr(stopset, rxbuffer[total_count - 1], (size_t)stopset_len))
+         {
+-            if (minlen == 1) { minlen = total_count; }
+-
+-            if (minlen < total_count)
+-            {
+-                minlen = total_count;
+-                //rig_debug(RIG_DEBUG_VERBOSE, "%s: minlen now %d\n", __func__, minlen);
+-            }
+-
+             break;
+         }
+     }
+ 
+     if (total_count > 1 && rxbuffer[0] == ';')
+     {
+-        while (rxbuffer[0] == ';' && total_count >  1)
++        while (rxbuffer[0] == ';' && total_count > 1)
+         {
+-            memmove(rxbuffer, &rxbuffer[1], strlen((char *)rxbuffer) - 1);
++            memmove(rxbuffer, &rxbuffer[1], (size_t)total_count - 1);
+             --total_count;
+         }
+ 
+         rig_debug(RIG_DEBUG_VERBOSE,
+-                  "%s: skipping single ';' chars at beginning of reply\n", __func__);
++                  "%s: skipping single ';' chars at beginning of reply\n",
++                  __func__);
+     }
+ 
+-    /*
+-     * Doesn't hurt anyway. But be aware, some binary protocols may have
+-     * null chars within the received buffer.
+-     */
+-    rxbuffer[total_count] = '\000';
++    rxbuffer[total_count] = '\0';
+ 
+     if (direct)
+     {
+         rig_debug(RIG_DEBUG_TRACE,
+                   "%s(): RX %d characters, direct=%d\n",
+-                  __func__,
+-                  total_count,
+-                  direct);
+-        dump_hex((unsigned char *) rxbuffer, total_count);
++                  __func__, total_count, direct);
++        dump_hex(rxbuffer, total_count);
+     }
+ 
+-    return total_count;           /* return bytes count read */
++    return total_count;
+ }
+ 
+ /**
+diff --git a/src/network.c b/src/network.c
+index 958075b..3b303c2 100644
+--- a/src/network.c
++++ b/src/network.c
+@@ -48,6 +48,10 @@
+ #  include <netinet/in.h>
+ #endif
+ 
++#ifndef __MINGW32__
++#  include <netinet/tcp.h>
++#endif
++
+ #if HAVE_NETDB_H
+ #  include <netdb.h>
+ #endif
+@@ -342,6 +346,31 @@ int network_open(hamlib_port_t *rp, int default_port)
+             return (-RIG_EIO);
+         }
+ 
++        /*
++         * Hamlib control protocols exchange small synchronous messages on
++         * persistent TCP connections.  Disable Nagle so a small request is
++         * not held behind an outstanding packet while waiting for an ACK.
++         * Failure to set this latency option is non-fatal.
++         */
++        if (rp->type.rig == RIG_PORT_NETWORK)
++        {
++            int one = 1;
++            int nodelay_status;
++
++#ifdef __MINGW32__
++            nodelay_status = setsockopt(fd, IPPROTO_TCP, TCP_NODELAY,
++                                       (const char *)&one, sizeof(one));
++#else
++            nodelay_status = setsockopt(fd, IPPROTO_TCP, TCP_NODELAY,
++                                       &one, sizeof(one));
++#endif
++
++            if (nodelay_status < 0)
++            {
++                handle_error(RIG_DEBUG_WARN, "setsockopt(TCP_NODELAY)");
++            }
++        }
++
+         if (connect(fd, res->ai_addr, res->ai_addrlen) == 0)
+         {
+             break;
