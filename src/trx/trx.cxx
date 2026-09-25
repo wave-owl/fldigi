@@ -73,8 +73,15 @@ static void trx_signal_state(void);
 
 //#define DEBUG
 
-/* ---------------------------------------------------------------------- */
+/* ------------------------------------------------------------------ */
 
+#include "cw_spectrum.h"
+#include "cw_channel.h"
+
+cw_spectrum		*cw_signals = (cw_spectrum *)0;
+cw_channel		*cw_test_channel = (cw_channel *)0;
+
+/* -------------------------------------------------------------------*/
 static sem_t*	trx_sem;
 static pthread_t trx_thread;
 state_t 	trx_state;
@@ -330,21 +337,33 @@ void trx_trx_receive_loop()
 		if (trx_state != STATE_RX)
 			break;
 
+		if (cw_signals == (cw_spectrum *)0) cw_signals = new cw_spectrum;
+
+		if (cw_test_channel == (cw_channel *)0) {
+			cw_test_channel = new cw_channel;
+//			cw_test_channel->init(1470.0);
+		}
+
 		if (bHighSpeed) {
 			bool afc = progStatus.afconoff;
 			progStatus.afconoff = false;
 			QRUNNER_DROP(true);
-			if (progdefaults.rsid)
+			if (progdefaults.rsid) {
 				ReedSolomon->receive(fbuf, numread);
-			else if (active_modem->get_mode() == MODE_OFDM_500F 
-					 || active_modem->get_mode() == MODE_OFDM_750F)
+			} else if (active_modem->get_mode() == MODE_OFDM_500F 
+					 || active_modem->get_mode() == MODE_OFDM_750F) {
 //					 || active_modem->get_mode() == MODE_OFDM_2000F)
 				ReedSolomon->receive(fbuf, numread); // OFDM modes use RSID as AFC mechanism. Force RxRSID.
+			}
 			active_modem->HistoryON(true);
 			active_modem->rx_process(hsbuff, numread);
 			QRUNNER_DROP(false);
 			progStatus.afconoff = afc;
 			active_modem->HistoryON(false);
+
+			cw_signals->process(hsbuff, numread);
+			cw_test_channel->process(fbuf, numread);
+
 		} else {
 			trxrb.write_advance(numread);
 
@@ -363,6 +382,9 @@ void trx_trx_receive_loop()
 						current_RXsamplerate,
 						(progdefaults.RxFilt_vol / (progdefaults.rxgain_x10 ? 10.0 : 100.0)));
 				}
+
+				cw_signals->process(fbuf, numread);
+				cw_test_channel->process(fbuf, numread);
 
 				if (progdefaults.rsid)
 					ReedSolomon->receive(fbuf, numread);

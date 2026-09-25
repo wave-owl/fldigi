@@ -38,9 +38,9 @@
 //=====================================================================
 // C_FIR_filter
 //
-//   a class of Finite Impulse Response (FIR) filters with 
+//   a class of Finite Impulse Response (FIR) filters with
 //   decimate in time capability
-//   
+//
 //=====================================================================
 
 C_FIR_filter::C_FIR_filter () {
@@ -69,9 +69,9 @@ void C_FIR_filter::init(int len, int dec, double *itaps, double *qtaps) {
 
 	for (int i = 0; i < FIRBufferLen; i++)
 		ibuffer[i] = qbuffer[i] = 0.0;
-	
+
 	if (itaps) {
-            ifilter = new double[len];
+			ifilter = new double[len];
 		for (int i = 0; i < len; i++) ifilter[i] = itaps[i];
 	}
 	if (qtaps) {
@@ -102,10 +102,10 @@ double * C_FIR_filter::bp_FIR(int len, int hilbert, double f1, double f2)
 
 		if (!hilbert) {
 			x = (2 * f2 * sinc(2 * f2 * t) -
-			     2 * f1 * sinc(2 * f1 * t)) * hamming(h);
+				 2 * f1 * sinc(2 * f1 * t)) * hamming(h);
 		} else {
 			x = (2 * f2 * cosc(2 * f2 * t) -
-			     2 * f1 * cosc(2 * f1 * t)) * hamming(h);
+				 2 * f1 * cosc(2 * f1 * t)) * hamming(h);
 // The actual filter code assumes the impulse response
 // is in time reversed order. This will be anti-
 // symmetric so the minus sign handles that for us.
@@ -221,7 +221,7 @@ int C_FIR_filter::Irun (const double &in, double &out) {
 //=====================================================================
 
 int C_FIR_filter::Qrun (const double &in, double &out) {
-	double *qptr = ibuffer + pointer;
+	double *qptr = qbuffer + pointer;
 
 	pointer++;
 	counter++;
@@ -310,7 +310,7 @@ void Cmovavg::reset()
 // Sliding FFT filter
 // Sliding Fast Fourier Transform
 //
-// The sliding FFT ingeniously exploits the properties of a time-delayed 
+// The sliding FFT ingeniously exploits the properties of a time-delayed
 // input and the property of linearity for its derivation.
 //
 // First of all, the N-point transform of a sequence x(n) is equal to the
@@ -329,70 +329,56 @@ void Cmovavg::reset()
 //	.
 //	+ transform of [0, 0, 0, 0, 0, 0,...xN-1]
 //
-// Secondly, the transform of a time-delayed sequence is a phase-rotated 
+// Secondly, the transform of a time-delayed sequence is a phase-rotated
 // version of the transform of the original sequence. i.e.
 //
 // If 		x(n) transforms to X(k),
 // Then		x(n-m) transforms to X(k)(Wn)^(-mk)
 //
-// where N is the FFT size, m is the delay in sample periods, and WN is the 
+// where N is the FFT size, m is the delay in sample periods, and WN is the
 // familiar phase-rotating coefficient or twiddle factor e^(-j2p/N)
 //
 // Therefore, if the N-point transform X(k) of an individual sample is considered,
-// and then the sample is moved back in time by one sample period, all frequency 
+// and then the sample is moved back in time by one sample period, all frequency
 // bins of X(k) are phase-rotated by 2pk/N radians.
 //
 // The important thing here is that the transform is not performed again because
 // the previous frequency results can be used by simply application of the correct
 // coefficients.
 //
-// This is the technique that is applied when the rectangular sampling window 
-// slides along by one sample.  The contributions of all samples that are 
-// included in both the original and the new windows are simply phase rotated. 
-// The end effects are that the transform of the new sample must be added, and 
-// the transform of the oldest sample that disappeared off the end must be 
+// This is the technique that is applied when the rectangular sampling window
+// slides along by one sample.  The contributions of all samples that are
+// included in both the original and the new windows are simply phase rotated.
+// The end effects are that the transform of the new sample must be added, and
+// the transform of the oldest sample that disappeared off the end must be
 // subtracted. These end-effects are easy to perform if we treat the new sample
 // as occurring at time t = 0, because the transform of a single sample at t = 0,
 // say (a + bj), simply has all frequency bins equal to (a + bj). Similarly, the
 // oldest sample that has just disappeared off the end of the window is exactly N
-// samples old. I.e. it occurred at t = -N. The transform of this sample, 
+// samples old. I.e. it occurred at t = -N. The transform of this sample,
 // say (c + dj), is also straightforward since every frequency bin has now been
-// phase-rotated an integer number of times from when the sample was at t = 0. 
+// phase-rotated an integer number of times from when the sample was at t = 0.
 // (The kth frequency bin has been rotated by 2pk radians). The transform of the
 // sample at t = -N is therefore the same as if it was still at t = 0. I.e. it
 // has all frequency bins equal to (c + dj).
 //
-// All that is needed therefore is to 
-//	phase rotate each frequency bin in F(k) by WN^(k) and then 
-//	add [(a + bj) + (c + dj)] to each frequency bin. 
+// All that is needed therefore is to
+//	phase rotate each frequency bin in F(k) by WN^(k) and then
+//	add [(a + bj) + (c + dj)] to each frequency bin.
 //
-// One cmplx multiplication and two cmplx additions per frequency bin are 
+// One cmplx multiplication and two cmplx additions per frequency bin are
 // therefore required, per sample period, regardless of the size of the transform.
 //
-// For example, a traditional 1024-point FFT needs 5120 cmplx multiplies 
-// and 10240 cmplx additions to calculate all 1024 frequency bins. A 1024-point 
-// Sliding FFT however needs 1024 cmplx multiplies and 2048 cmplx additions 
-// for all 1024 frequency bins, and as each frequency bin is calculated separately, 
+// For example, a traditional 1024-point FFT needs 5120 cmplx multiplies
+// and 10240 cmplx additions to calculate all 1024 frequency bins. A 1024-point
+// Sliding FFT however needs 1024 cmplx multiplies and 2048 cmplx additions
+// for all 1024 frequency bins, and as each frequency bin is calculated separately,
 // it is only necessary to calculate the ones that are of interest.
 //
-// One drawback of the Sliding FFT is that in using feedback from previous 
-// frequency bins, there is potential for instability if the coefficients are not 
-// infinitely precise. Without infinite precision, stability can be guaranteed by 
-// making each phase-rotation coefficient have a  magnitude of slightly less than 
-// unity. E.g. 0.9999. 
-//
-// This then has to taken into account when the Nth sample is subtracted, because 
-// the factor 0.9999 has been applied N times to the transform of this sample. 
-// The sample cannot therefore be directly subtracted, it must first be multiplied 
-// by the factor of 0.9999^N. This unfortunately means there is another multipli-
-// cation to perform per frequency bin. Another drawback is that a circular buffer
-// is needed in which to keep N samples, so that the oldest sample, (from t= -N),
-// can be subtracted each time.
-//
 // This filter is ideal for extracting a finite number of frequency bins
-// with a very long kernel length.  The filter only needs to calculate the 
+// with a very long kernel length.  The filter only needs to calculate the
 // values for the bins of interest and not the entire spectrum.  It does
-// require the store of the history associated with those bins over the 
+// require the store of the history associated with those bins over the
 // kernel length.
 //
 // Use in the MFSK / DOMINO modem for extraction of the frequency spectra
@@ -403,31 +389,6 @@ struct sfft::vrot_bins_pair {
 	cmplx vrot;
 	cmplx bins;
 } ;
-
-sfft::sfft(int len, int _first, int _last)
-{
-	vrot_bins = new vrot_bins_pair[len];
-	delay  = new cmplx[len];
-	fftlen = len;
-	first = _first;
-	last = _last;
-	ptr = 0;
-	double phi = 0.0, tau = 2.0 * M_PI/ len;
-	k2 = 1.0;
-	for (int i = 0; i < fftlen; i++) {
-		vrot_bins[i].vrot = cmplx( K1 * cos (phi), K1 * sin (phi) );
-		phi += tau;
-		delay[i] = vrot_bins[i].bins = 0.0;
-		k2 *= K1;
-	}
-	count = 0;
-}
-
-sfft::~sfft()
-{
-	delete [] vrot_bins;
-	delete [] delay;
-}
 
 void sfft::reset()
 {
@@ -440,28 +401,116 @@ bool sfft::is_stable()
 	return (count >= fftlen);
 }
 
-// Sliding FFT, cmplx input, cmplx output
-// FFT is computed for each value from first to last
-// Values are not stable until more than "len" samples have been processed.
-// Copies the frequencies to a pointer with a given stride.
-void sfft::run(const cmplx& input, cmplx * __restrict__ result, int stride )
+void sfft::apply_hann_window(cmplx * __restrict__ windowed_result, int stride)
 {
-	cmplx & de = delay[ptr];
-	const cmplx z( input.real() - k2 * de.real(), input.imag() - k2 * de.imag());
-	de = input;
+	// Ensure we don't read out of bounds. The math requires k-1 and k+1.
+	// If first is 0 or last is fftlen, clamp or handle boundaries.
 
-	++ptr ;
-	if( ptr >= fftlen ) ptr = 0 ;
+	int start_idx = (first == 0) ? 1 : first;
+	int end_idx = (last == fftlen) ? fftlen - 1 : last;
 
-	// It is more efficient to have vrot and bins very close to each other.
-	for(	vrot_bins_pair
-			* __restrict__ itr = vrot_bins + first,
-			* __restrict__ end = vrot_bins + last ;
-		itr != end ;
-		++itr, result += stride ) {
-		*result = itr->bins = itr->bins * itr->vrot + z * itr->vrot;
+	// Boundary case for the very first bin if requested
+	if (first == 0) {
+		windowed_result[0] = 0.5 * vrot_bins[0].bins - 0.25 * (vrot_bins[fftlen - 1].bins + vrot_bins[1].bins);
 	}
-	if (count < fftlen) count++;
+
+	// Main 3-point frequency convolution loop
+	for (int i = start_idx; i < end_idx; ++i) {
+		windowed_result[(i - first) * stride] =
+			0.5 * vrot_bins[i].bins - 0.25 * (vrot_bins[i - 1].bins + vrot_bins[i + 1].bins);
+	}
+
+	// Boundary case for the very last bin if requested
+	if (last == fftlen) {
+		int last_out_idx = (fftlen - 1 - first) * stride;
+		windowed_result[last_out_idx] =
+			0.5 * vrot_bins[fftlen - 1].bins - 0.25 * (vrot_bins[fftlen - 2].bins + vrot_bins[0].bins);
+	}
+}
+
+sfft::sfft(int len, int _first, int _last)
+{
+	vrot_bins = new vrot_bins_pair[len];
+	delay  = new cmplx[len];
+	fftlen = len;
+	first = _first;
+	last = _last;
+	ptr = 0;
+	reset_bin_ptr = _first; // Start the background refresh at the first active bin
+
+	double phi = 0.0, tau = 2.0 * M_PI / len;
+
+	for (int i = 0; i < fftlen; i++) {
+		// Pure rotation vector without artificial decay scaling
+		vrot_bins[i].vrot = cmplx(cos(phi), sin(phi));
+		phi += tau;
+		delay[i] = vrot_bins[i].bins = 0.0;
+	}
+	count = 0;
+}
+
+sfft::~sfft()
+{
+	delete [] vrot_bins;
+	delete [] delay;
+}
+
+void sfft::run(const cmplx& input, cmplx * __restrict__ result, int stride)
+{
+	// Save the oldest value before we overwrite it
+	const cmplx de = delay[ptr];
+	delay[ptr] = input;
+
+	// Standard recursive update step (k2 is omitted since it is exactly 1.0)
+	const cmplx z(input.real() - de.real(), input.imag() - de.imag());
+
+	++ptr;
+	if (ptr >= fftlen) ptr = 0;
+
+	// 1. Run the highly optimized recursive sliding step across the active spectrum block
+	for (vrot_bins_pair
+			* __restrict__ itr = vrot_bins + first,
+			* __restrict__ end = vrot_bins + last;
+		itr != end;
+		++itr, result += stride) {
+
+		// Pure un-decayed recursive step
+		itr->bins = (itr->bins + z) * itr->vrot;
+		*result = itr->bins;
+	}
+
+	if (count < fftlen) {
+		count++;
+		return; // Do not apply hard resets until the history buffer is entirely full
+	}
+
+	// 2. BACKGROUND HARD RESET: Recalculate EXACTLY ONE bin per sample step
+	// This perfectly cleanses numerical drift over time without causing CPU spikes.
+	if (reset_bin_ptr >= last) {
+		reset_bin_ptr = first; // Wrap back to the beginning of the active spectrum window
+	}
+
+	cmplx precise_accumulator(0.0, 0.0);
+	double omega = (2.0 * M_PI * reset_bin_ptr) / fftlen;
+
+	// Compute a direct DFT calculation for just this single bin using the raw history buffer.
+	// We traverse backward starting from the newest sample down to the oldest.
+	int history_index = ptr;
+	for (int n = 0; n < fftlen; ++n) {
+		--history_index;
+		if (history_index < 0) history_index = fftlen - 1;
+
+		double angle = omega * n;
+		cmplx twiddle(cos(angle), sin(angle));
+
+		precise_accumulator += delay[history_index] * twiddle;
+	}
+
+	// Hard-overwrite the recursive accumulator bin with the mathematically perfect value
+	vrot_bins[reset_bin_ptr].bins = precise_accumulator;
+
+	// Advance the background wiper pointer by one bin for the next sample call
+	reset_bin_ptr++;
 }
 
 // ============================================================================
@@ -537,15 +586,15 @@ bool goertzel::run(double sample)
 
 double goertzel::real()
 {
-    return ((0.5*k3*Q1 - Q2)/N);
+	return ((0.5*k3*Q1 - Q2)/N);
 }
 
 double goertzel::imag()
 {
-    return ((k2*Q1)/N);
+	return ((k2*Q1)/N);
 }
 
 double goertzel::mag()
 {
-    return (Q2*Q2 + Q1*Q1 - k3*Q2*Q1);
+	return (Q2*Q2 + Q1*Q1 - k3*Q2*Q1);
 }

@@ -210,6 +210,15 @@ extern Fl_Scroll       *wefax_pic_rx_scroll;
 
 #include "tabdefs.h"
 
+//=======================  CW channel testing ==========================
+#include "cw_channel.h"
+#include "cw_test_dialog.h"
+
+extern cw_channel *cw_test_channel;
+
+Fl_Double_Window *cw_test_dialog = create_cw_test_dialog();
+//======================================================================
+
 #define CB_WHEN FL_WHEN_CHANGED | FL_WHEN_NOT_CHANGED | FL_WHEN_ENTER_KEY_ALWAYS | FL_WHEN_RELEASE_ALWAYS
 
 #define LOG_TO_FILE_MLABEL     _("Log all RX/TX text")
@@ -1694,7 +1703,8 @@ void remove_windows()
 		"fsq monitor", "fsq rxwin", "fsq txwin",
 		"ifkp rxwin", "ifkp txwin",
 		"macro editor", "test signals", "rx audio",
-		"wefax tx dialog"
+		"wefax tx dialog",
+		"cw test dialog"
 	};
 	Fl_Double_Window *w[] = {
 		scopeview, dlgRecordLoader,
@@ -1708,7 +1718,9 @@ void remove_windows()
 		ifkppicRxWin, ifkppicTxWin,
 		MacroEditDialog,
 		test_signal_window,
-		rxaudio_dialog, wefax_pic_tx_win };
+		rxaudio_dialog, wefax_pic_tx_win,
+		cw_test_dialog
+		};
 		std::string sdeleting = "\nDeleting dialogs / Stopping debug session";
 	for (size_t n = 0; n < sizeof(w) / sizeof(*w); n++) {
 		if (w[n]) {
@@ -2384,6 +2396,13 @@ void cb_mnuConfigNotify(Fl_Menu_*, void*)
 {
 	notify_show();
 }
+
+//==================  CW Test Dialog ===================================
+void cb_open_cw_test_dialog(Fl_Menu_*, void*)
+{
+	cw_test_dialog->show();
+}
+//======================================================================
 
 #if USE_LIBGPIOD
 void cb_mnuConfigGPIO(Fl_Menu_*, void*)
@@ -7574,6 +7593,9 @@ Fl_Menu_Item menu_[] = {
 { icons::make_icon_label(_("GPIO Config")), 0,  (Fl_Callback*)cb_mnuConfigGPIO, 0, FL_MENU_DIVIDER, _FL_MULTI_LABEL, 0, 14, 0},
 #endif
 { icons::make_icon_label(_("Notifications")), 0,  (Fl_Callback*)cb_mnuConfigNotify, 0, FL_MENU_DIVIDER, _FL_MULTI_LABEL, 0, 14, 0},
+/* ==================  CW Test Dialog =================================== */
+{ icons::make_icon_label(_("CW Test Dialog")), 0,  (Fl_Callback*)cb_open_cw_test_dialog, 0, FL_MENU_DIVIDER, _FL_MULTI_LABEL, 0, 14, 0},
+/* ====================================================================== */
 { icons::make_icon_label(_("Test Signals")), 0, (Fl_Callback*)cb_mnuTestSignals, 0, 0, _FL_MULTI_LABEL, 0, 14, 0},
 {0,0,0,0,0,0,0,0,0},
 

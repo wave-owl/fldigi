@@ -809,6 +809,11 @@ void cw::rx_FFTprocess(const double *buf, int len)
 
 static bool cwprocessing = false;
 
+#include "../hwfall/hwfall.cxx"
+#include "../hwfall/hwfall_viewer.cxx"
+
+Fl_Double_Window *seecw = 0;
+
 int cw::rx_process(const double *buf, int len)
 {
 	if (use_paren != progdefaults.CW_use_paren ||
@@ -838,6 +843,12 @@ int cw::rx_process(const double *buf, int len)
 		viewcw.rx_process(buf, len);
 
 	cwprocessing = false;
+
+	if (seecw == 0) {
+		seecw = hwf_viewer::create_viewer();
+		seecw->show();
+	}
+	hwf_viewer::rx_process(buf, len);
 
 	return 0;
 }

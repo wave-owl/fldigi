@@ -134,7 +134,6 @@ public:
 //=====================================================================
 
 class sfft {
-#define K1 0.99999999999L
 private:
 	int fftlen;
 	int first;
@@ -143,14 +142,17 @@ private:
 	struct vrot_bins_pair ;
 	vrot_bins_pair * __restrict__ vrot_bins ;
 	cmplx * __restrict__ delay;
-	double k2;
 	int count;
+
+    int reset_bin_ptr; // Tracks which bin is being hard-recalculated on this step
+
 public:
 	sfft(int len, int first, int last);
 	~sfft();
 	bool is_stable();
 	void reset();
 	void run(const cmplx& input, cmplx * __restrict__ result, int stride );
+	void apply_hann_window(cmplx * __restrict__ windowed_result, int stride);
 };
 
 

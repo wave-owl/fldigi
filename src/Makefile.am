@@ -379,7 +379,8 @@ FLDIGI_FL_SRC = \
 		dialogs/testsigs.fl \
 		logbook/lgbook.fl \
 		logbook/fd_view.fl \
-		dxcluster/dx_dialog.fl
+		dxcluster/dx_dialog.fl \
+		cw/cw_test_dialog.fl
 
 if HAVE_FLUID
 flgen: $(FLDIGI_FL_SRC)
@@ -463,6 +464,11 @@ fldigi_SOURCES += \
 	config_script/script_parsing.h \
 	contestia/contestia.cxx \
 	cw/cw.cxx \
+	cw/cw_spectrum.cxx \
+	cw/cw_tracker.cxx \
+	cw/cw_channel.cxx \
+	cw/cw_observer.cxx \
+	cw/cw_test_dialog.cxx \
 	cw/ICOMkeying.cxx \
 	cw/KYkeying.cxx  \
 	cw/morse.cxx \
@@ -734,6 +740,12 @@ EXTRA_fldigi_SOURCES += \
 	include/coordinate.h \
 	include/counties.h \
 	include/cw.h \
+	include/cw_signal.h \
+	include/cw_spectrum.h \
+	include/cw_tracker.h \
+	include/cw_channel.h \
+	include/cw_observer.h \
+	include/cw_test_dialog.h \
 	include/data_io.h \
 	include/date.h \
 	include/debug.h \
