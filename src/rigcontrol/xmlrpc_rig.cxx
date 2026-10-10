@@ -45,7 +45,11 @@
 #include "qrunner.h"
 #include "debug.h"
 #include "status.h"
+
+#include "tci.h"
+
 #include "squelch_status.h"
+
 #include "icons.h"
 
 using namespace XmlRpc;
@@ -183,6 +187,8 @@ P2F( (ptt_state ? "set ON": "set OFF") );
 }
 
 void set_flrig_ptt(int on) {
+	if (tci_is_active())
+		return;
 	if (!active_modem)
 		return;
 	if (active_modem->get_mode() == MODE_CW) {

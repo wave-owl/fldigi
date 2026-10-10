@@ -387,6 +387,7 @@ set(FLDIGI_SOURCES
     src/rigcontrol/rigxml.cxx
     src/rigcontrol/serial.cxx
     src/rigcontrol/xmlrpc_rig.cxx
+    src/rigcontrol/tci.cxx
 
     src/rsid/rsid.cxx
 

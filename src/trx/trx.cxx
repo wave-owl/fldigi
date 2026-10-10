@@ -49,6 +49,7 @@
 #include "nullmodem.h"
 #include "macros.h"
 #include "rigsupport.h"
+#include "tci.h"
 #include "psm/psm.h"
 #include "icons.h"
 #include "fft-monitor.h"
@@ -761,7 +762,26 @@ void trx_reset_loop()
 		TXscard = 0;
 	}
 
-	switch (progdefaults.btnAudioIOis) {
+	if (tci_audio_wanted()) {
+		try {
+			RXscard = new SoundTCI();
+			RXscard->Open(O_RDONLY, current_RXsamplerate = 8000);
+			RXsc_is_open = true;
+			TXscard = new SoundTCI();
+			TXscard->Open(O_WRONLY, current_TXsamplerate = 8000);
+			if (progdefaults.is_full_duplex)
+				TXsc_is_open = true;
+		} catch (const SndException& e) {
+			LOG_ERROR("TCI audio: %s", e.what());
+			if (RXscard) delete RXscard;
+			if (TXscard) delete TXscard;
+			RXscard = 0;
+			TXscard = 0;
+			reset_loop_msg = "TCI audio open failure";
+			progdefaults.tci_audio = false;
+			REQ(show_reset_loop_alert);
+		}
+	} else switch (progdefaults.btnAudioIOis) {
 #if USE_OSS
 	case SND_IDX_OSS:
 		try {
@@ -911,7 +931,10 @@ void trx_start(void)
 	if (dtmf) delete dtmf;
 
 
-	switch (progdefaults.btnAudioIOis) {
+	if (tci_audio_wanted()) {
+		RXscard = new SoundTCI();
+		TXscard = new SoundTCI();
+	} else switch (progdefaults.btnAudioIOis) {
 #if USE_OSS
 	case SND_IDX_OSS:
 		RXscard = new SoundOSS(scDevice[0].c_str());

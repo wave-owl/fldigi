@@ -3662,6 +3662,7 @@ static Fl_Menu_Item alt_menu_[] = {
 
 {_("&Configure"), 0, 0, 0, FL_SUBMENU, FL_NORMAL_LABEL, 0, 14, 0},
 { icons::make_icon_label(_("Config Dialog")), 0, (Fl_Callback*)cb_mnu_config_dialog, 0, FL_MENU_DIVIDER, _FL_MULTI_LABEL, 0, 14, 0},
+{ icons::make_icon_label(_("TCI (Zeus / ExpertSDR)")), 0, (Fl_Callback*)cb_mnu_tci, 0, FL_MENU_DIVIDER, FL_NORMAL_LABEL, 0, 14, 0},
 { icons::make_icon_label(_("Test Signals")), 0, (Fl_Callback*)cb_mnuTestSignals, 0, FL_MENU_DIVIDER, _FL_MULTI_LABEL, 0, 14, 0},
 { icons::make_icon_label(_("Notifications")), 0,  (Fl_Callback*)cb_mnuConfigNotify, 0, FL_MENU_DIVIDER, _FL_MULTI_LABEL, 0, 14, 0},
 { icons::make_icon_label(_("Save Config"), save_icon), 0, (Fl_Callback*)cb_mnuSaveConfig, 0, 0, _FL_MULTI_LABEL, 0, 14, 0},

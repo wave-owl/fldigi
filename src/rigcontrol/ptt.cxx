@@ -63,6 +63,8 @@
 #include "serial.h"
 #include "re.h"
 #include "debug.h"
+#include "status.h"
+#include "tci.h"
 
 #include "fl_digi.h"
 #include "confdialog.h"
@@ -148,7 +150,7 @@ void PTT::set(bool ptt)
 		pttdev == PTT_UHROUTER ? "UHROUTER" : "UNKNOWN";
 	LOG_INFO("PTT via %s : %s", ptt_temp.c_str(), ptt ? "ON" : "OFF");
 
-// add milliseconds - no audio to clear virtual audio card used by Flex systems
+	// add milliseconds - no audio to clear virtual audio card used by Flex systems
 	if (!ptt && progdefaults.PTT_off_delay)
 		MilliSleep(progdefaults.PTT_off_delay);
 
@@ -156,7 +158,9 @@ void PTT::set(bool ptt)
 		guard_lock lk(&cwio_ptt_mutex);
 	}
 
-	switch (pttdev) {
+	if (tci_is_active()) {
+		tci_set_ptt(ptt);
+	} else switch (pttdev) {
 	case PTT_NONE:
 		if (n3fjp_connected)
 			n3fjp_set_ptt(ptt);

@@ -81,6 +81,7 @@ extern Fl_Scroll       *wefax_pic_rx_scroll;
 #include "main.h"
 #include "threads.h"
 #include "trx.h"
+#include "tci.h"
 #if USE_HAMLIB
 	#include "hamlib.h"
 #endif
@@ -7569,6 +7570,7 @@ Fl_Menu_Item menu_[] = {
 {_("&Configure"), 0, 0, 0, FL_SUBMENU, FL_NORMAL_LABEL, 0, 14, 0},
 
 { icons::make_icon_label(_("Config Dialog")), 0, (Fl_Callback*)cb_mnu_config_dialog, 0, FL_MENU_DIVIDER, _FL_MULTI_LABEL, 0, 14, 0},
+{ _("TCI (Zeus / ExpertSDR)"), 0, (Fl_Callback*)cb_mnu_tci, 0, FL_MENU_DIVIDER, FL_NORMAL_LABEL, 0, 14, 0},
 { icons::make_icon_label(_("Save Config"), save_icon), 0, (Fl_Callback*)cb_mnuSaveConfig, 0, FL_MENU_DIVIDER, _FL_MULTI_LABEL, 0, 14, 0},
 #if USE_LIBGPIOD
 { icons::make_icon_label(_("GPIO Config")), 0,  (Fl_Callback*)cb_mnuConfigGPIO, 0, FL_MENU_DIVIDER, _FL_MULTI_LABEL, 0, 14, 0},
@@ -10193,7 +10195,9 @@ void qsy(unsigned long long rfc, int fmid)
 			rfc += (wf->USB() ? adj : -adj);
 	}
 
-	if (connected_to_flrig)
+	if (tci_is_active())
+		qso_selectFreq((long int) rfc, fmid);
+	else if (connected_to_flrig)
 		REQ(xmlrpc_rig_set_qsy, rfc);
 	else if (progdefaults.chkUSERIGCATis)
 		REQ(rigCAT_set_qsy, rfc);

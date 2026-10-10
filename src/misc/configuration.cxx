@@ -764,6 +764,7 @@ void configuration::reset(void)
 }
 
 #include "rigio.h"
+#include "tci.h"
 
 void configuration::initInterface()
 {
@@ -807,7 +808,11 @@ LOG_INFO("Closing rig interface threads");
 	listbox_baudrate->hide();
 #endif
 
-	if (connected_to_flrig) {
+	if (progdefaults.tci_enable) {
+		LOG_INFO("%s", "using TCI xcvr control");
+		wf->USB(true);
+		wf->setQSY(1);
+	} else if (connected_to_flrig) {
 		LOG_INFO("%s", "using flrig xcvr control");
 		wf->setQSY(1);
 	} else if (chkUSERIGCATis) { // start the rigCAT thread
