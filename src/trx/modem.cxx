@@ -259,6 +259,7 @@ modem *fmt_modem = 0;
 modem *dcf77_modem = 0;
 modem *msf_modem = 0;
 modem *wwvb_modem = 0;
+modem *sstv_modem = 0;
 modem *ssb_modem = 0;
 
 double modem::frequency = 1000;

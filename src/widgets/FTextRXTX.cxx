@@ -71,6 +71,7 @@
 #include "strutil.h"
 
 #include "debug.h"
+#include "sstv.h"
 
 #include "contest.h"
 #include "counties.h"
@@ -2511,6 +2512,8 @@ void FTextTX::menu_cb(size_t item)
 			trx_mode md = active_modem->get_mode();
 		if (md == MODE_IFKP)
 			ifkp_showTxViewer();
+		else if (md == MODE_SSTV)
+			sstv_showTxViewer();
 		else if (md >= MODE_THOR_FIRST && md <= MODE_THOR_LAST)
 			thor_showTxViewer();
 		else

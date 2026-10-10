@@ -408,6 +408,14 @@ set(FLDIGI_SOURCES
 
     src/ssb/ssb.cxx
 
+    src/sstv/sstv.cxx
+    src/sstv/sstv_decoder.cxx
+    src/sstv/sstv-editor.cxx
+    src/sstv/sstv-favorite.cxx
+    src/sstv/sstv-macros.cxx
+    src/sstv/sstv-pic.cxx
+    src/sstv/sstv-qsl.cxx
+
     src/status/squelch_status.cxx
     src/status/status.cxx
     src/status/ui_colors.cxx

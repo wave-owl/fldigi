@@ -265,6 +265,7 @@ const struct mode_info_t mode_info[NUM_MODES] = {
 {MODE_DCF77,&dcf77_modem,"DCF77","DCF77","","","","","", DISABLED_IO },
 {MODE_MSF,&msf_modem,"MSF","MSF","","","","","", DISABLED_IO },
 {MODE_WWVB,&wwvb_modem,"WWVB","WWVB","","","","","", DISABLED_IO },
+{MODE_SSTV,&sstv_modem,"SSTV","SSTV","","SSTV","SSTV","","", DISABLED_IO },
 
 {MODE_EOT,&null_modem,"RSID_EOT","EOT","","EOT","","","", DISABLED_IO }
 };

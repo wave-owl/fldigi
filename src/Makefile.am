@@ -508,6 +508,13 @@ fldigi_SOURCES += \
 	timesig/timesig.cxx \
 	timesig/timesig_decoder.cxx \
 	timesig/timesig_formats.cxx \
+	sstv/sstv.cxx \
+	sstv/sstv-pic.cxx \
+	sstv/sstv_decoder.cxx \
+	sstv/sstv-editor.cxx \
+	sstv/sstv-favorite.cxx \
+	sstv/sstv-macros.cxx \
+	sstv/sstv-qsl.cxx \
 	fmt/fmt_dialog.cxx \
 	fsq/fsq.cxx \
 	fsq/fsq_monitor.cxx \
@@ -768,6 +775,12 @@ EXTRA_fldigi_SOURCES += \
 	include/fmt.h \
 	include/timesig.h \
 	include/timesig_decoder.h \
+	include/sstv.h \
+	include/sstv_decoder.h \
+	include/sstv-editor.h \
+	include/sstv-favorite.h \
+	include/sstv-macros.h \
+	include/sstv-qsl.h \
 	include/fmt_dialog.h \
 	include/font_browser.h \
 	include/fontdef.h \

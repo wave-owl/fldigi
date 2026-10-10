@@ -105,4 +105,6 @@ extern void TxQueINSERTIMAGE(std::string s);
 extern void clear_buffered_text();
 extern char next_buffered_macro_char();
 
+extern std::string cut_string(const char *s);
+
 #endif

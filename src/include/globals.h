@@ -273,6 +273,7 @@ enum {
 	MODE_DCF77,
 	MODE_MSF,
 	MODE_WWVB,
+	MODE_SSTV,
 
 	MODE_EOT,  // a dummy mode used to invoke transmission of RsID-EOT code
 	NUM_MODES,

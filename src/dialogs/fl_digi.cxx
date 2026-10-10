@@ -110,8 +110,12 @@ extern Fl_Scroll       *wefax_pic_rx_scroll;
 #include "ssb.h"
 
 #include "fmt.h"
-#include "timesig.h"
 #include "fmt_dialog.h"
+
+#include "timesig.h"
+
+#include "sstv.h"
+#include "sstv-editor.h"
 
 #include "fileselect.h"
 
@@ -2129,6 +2133,11 @@ void init_modem(trx_mode mode, int freq)
 				  *mode_info[mode].modem = new timesig(mode), freq);
 		break;
 
+	case MODE_SSTV:
+		startup_modem(*mode_info[mode].modem ? *mode_info[mode].modem :
+				  *mode_info[mode].modem = new sstv, freq);
+		break;
+
 	case MODE_SSB:
 		startup_modem(*mode_info[mode].modem ? *mode_info[mode].modem :
 				  *mode_info[mode].modem = new ssb, freq);
@@ -3223,6 +3232,10 @@ void cb_mnuThorViewRaw(Fl_Menu_ *, void *) {
 
 void cb_mnuIfkpViewRaw(Fl_Menu_ *, void *) {
 	ifkp_load_raw_video();
+}
+
+void cb_mnu_sstv_editor(Fl_Menu_ *, void *) {
+	sstv_open_editor(320, 256, {}, {});
 }
 
 void cb_sldrSquelch(Fl_Slider* o, void*) {
@@ -7568,6 +7581,7 @@ Fl_Menu_Item menu_[] = {
 { mode_info[MODE_MSF].name, 0, cb_init_mode, (void *)MODE_MSF, 0, FL_NORMAL_LABEL, 0, 14, 0},
 { mode_info[MODE_WWVB].name, 0, cb_init_mode, (void *)MODE_WWVB, 0, FL_NORMAL_LABEL, 0, 14, 0},
 {0,0,0,0,0,0,0,0,0},
+{ mode_info[MODE_SSTV].name, 0, cb_init_mode, (void *)MODE_SSTV, 0, FL_NORMAL_LABEL, 0, 14, 0},
 { mode_info[MODE_ANALYSIS].name, 0, cb_init_mode, (void *)MODE_ANALYSIS, 0, FL_NORMAL_LABEL, 0, 14, 0},
 { mode_info[MODE_FMT].name, 0, cb_init_mode, (void *)MODE_FMT, FL_MENU_DIVIDER, FL_NORMAL_LABEL, 0, 14, 0},
 
@@ -7606,6 +7620,8 @@ Fl_Menu_Item menu_[] = {
 { icons::make_icon_label(THOR_IMAGE_MLABEL, image_icon), 0, (Fl_Callback*)cb_mnuThorViewRaw,0, FL_MENU_INACTIVE, _FL_MULTI_LABEL, 0, 14, 0},
 { icons::make_icon_label(IFKP_IMAGE_MLABEL, image_icon), 0, (Fl_Callback*)cb_mnuIfkpViewRaw,0, FL_MENU_INACTIVE | FL_MENU_DIVIDER, _FL_MULTI_LABEL, 0, 14, 0},
 { icons::make_icon_label(WEFAX_TX_IMAGE_MLABEL, image_icon), 0, (Fl_Callback*)wefax_pic::cb_mnu_pic_viewer_tx,0, FL_MENU_INACTIVE | FL_MENU_DIVIDER, _FL_MULTI_LABEL, 0, 14, 0},
+
+{ icons::make_icon_label(_("SSTV editor"), image_icon), 0, (Fl_Callback*)cb_mnu_sstv_editor, 0, FL_MENU_DIVIDER, _FL_MULTI_LABEL, 0, 14, 0},
 
 { icons::make_icon_label(COUNTRIES_MLABEL), 0, (Fl_Callback*)cb_mnuShowCountries, 0, FL_MENU_DIVIDER, _FL_MULTI_LABEL, 0, 14, 0},
 
