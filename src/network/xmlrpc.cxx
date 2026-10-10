@@ -508,6 +508,12 @@ public:
 			macros.saveMacroFile();
 		macros.changed = false;
 
+		// Close from the FLTK event loop, not from here: this function runs
+		// inside a qrunner queue, and the shutdown deletes the qrunners.
+		Fl::add_timeout(0.0, close_main);
+	}
+	static void close_main(void *)
+	{
 		fl_digi_main->do_callback();
 	}
 	void execute(const xmlrpc_c::paramList& params, xmlrpc_c::value* retval)
