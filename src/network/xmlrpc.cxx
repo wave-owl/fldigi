@@ -2192,7 +2192,7 @@ public:
 	void execute(const xmlrpc_c::paramList& params, xmlrpc_c::value* retval)
 	{
 		trx_mode id = active_modem->get_mode();
-		if ( id == MODE_SSB || id == MODE_WWV || id == MODE_ANALYSIS ||
+		if ( id == MODE_SSB || id == MODE_WWV || id == MODE_DCF77 || id == MODE_MSF || id == MODE_WWVB || id == MODE_ANALYSIS ||
 			id == MODE_WEFAX_576 || id == MODE_WEFAX_288 ) {
 			*retval = xmlrpc_c::value_string("0:1:0");
 			return;
@@ -2252,7 +2252,7 @@ public:
 	void execute(const xmlrpc_c::paramList& params, xmlrpc_c::value* retval)
 	{
 		trx_mode id = active_modem->get_mode();
-		if ( id == MODE_SSB || id == MODE_WWV || id == MODE_ANALYSIS ||
+		if ( id == MODE_SSB || id == MODE_WWV || id == MODE_DCF77 || id == MODE_MSF || id == MODE_WWVB || id == MODE_ANALYSIS ||
 			id == MODE_WEFAX_576 || id == MODE_WEFAX_288 ) {
 			*retval = xmlrpc_c::value_string("0:1:0");
 			return;
@@ -2354,7 +2354,7 @@ public:
 	void execute(const xmlrpc_c::paramList& params, xmlrpc_c::value* retval)
 	{
 		trx_mode id = active_modem->get_mode();
-		if ( id == MODE_SSB || id == MODE_WWV || id == MODE_ANALYSIS ||
+		if ( id == MODE_SSB || id == MODE_WWV || id == MODE_DCF77 || id == MODE_MSF || id == MODE_WWVB || id == MODE_ANALYSIS ||
 			id == MODE_WEFAX_576 || id == MODE_WEFAX_288 ||
 			id == MODE_SITORB || id == MODE_NAVTEX ) {
 			*retval = xmlrpc_c::value_string("0:1:0.0");

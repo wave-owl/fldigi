@@ -505,6 +505,9 @@ fldigi_SOURCES += \
 	filters/filters.cxx \
 	filters/viterbi.cxx \
 	fmt/fmt.cxx \
+	timesig/timesig.cxx \
+	timesig/timesig_decoder.cxx \
+	timesig/timesig_formats.cxx \
 	fmt/fmt_dialog.cxx \
 	fsq/fsq.cxx \
 	fsq/fsq_monitor.cxx \
@@ -763,6 +766,8 @@ EXTRA_fldigi_SOURCES += \
 	include/flmisc.h \
 	include/flslider2.h \
 	include/fmt.h \
+	include/timesig.h \
+	include/timesig_decoder.h \
 	include/fmt_dialog.h \
 	include/font_browser.h \
 	include/fontdef.h \

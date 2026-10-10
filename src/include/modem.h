@@ -518,6 +518,9 @@ extern modem *throbx4_modem;
 extern modem *wwv_modem;
 extern modem *anal_modem;
 extern modem *fmt_modem;
+extern modem *dcf77_modem;
+extern modem *msf_modem;
+extern modem *wwvb_modem;
 extern modem *ssb_modem;
 
 extern modem *fsq_modem;

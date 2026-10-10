@@ -110,6 +110,7 @@ extern Fl_Scroll       *wefax_pic_rx_scroll;
 #include "ssb.h"
 
 #include "fmt.h"
+#include "timesig.h"
 #include "fmt_dialog.h"
 
 #include "fileselect.h"
@@ -2121,6 +2122,11 @@ void init_modem(trx_mode mode, int freq)
 	case MODE_FMT:
 		startup_modem(*mode_info[mode].modem ? *mode_info[mode].modem :
 				  *mode_info[mode].modem = new fmt, freq);
+		break;
+
+	case MODE_DCF77: case MODE_MSF: case MODE_WWVB:
+		startup_modem(*mode_info[mode].modem ? *mode_info[mode].modem :
+				  *mode_info[mode].modem = new timesig(mode), freq);
 		break;
 
 	case MODE_SSB:
@@ -7557,6 +7563,11 @@ Fl_Menu_Item menu_[] = {
 {0,0,0,0,0,0,0,0,0},
 
 { mode_info[MODE_WWV].name, 0, cb_init_mode, (void *)MODE_WWV, 0, FL_NORMAL_LABEL, 0, 14, 0},
+{"Time signals", 0, 0, 0, FL_SUBMENU, FL_NORMAL_LABEL, 0, 14, 0},
+{ mode_info[MODE_DCF77].name, 0, cb_init_mode, (void *)MODE_DCF77, 0, FL_NORMAL_LABEL, 0, 14, 0},
+{ mode_info[MODE_MSF].name, 0, cb_init_mode, (void *)MODE_MSF, 0, FL_NORMAL_LABEL, 0, 14, 0},
+{ mode_info[MODE_WWVB].name, 0, cb_init_mode, (void *)MODE_WWVB, 0, FL_NORMAL_LABEL, 0, 14, 0},
+{0,0,0,0,0,0,0,0,0},
 { mode_info[MODE_ANALYSIS].name, 0, cb_init_mode, (void *)MODE_ANALYSIS, 0, FL_NORMAL_LABEL, 0, 14, 0},
 { mode_info[MODE_FMT].name, 0, cb_init_mode, (void *)MODE_FMT, FL_MENU_DIVIDER, FL_NORMAL_LABEL, 0, 14, 0},
 

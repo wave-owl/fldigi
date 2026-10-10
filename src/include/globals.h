@@ -270,6 +270,9 @@ enum {
 	MODE_WWV,
 	MODE_ANALYSIS,
 	MODE_FMT,
+	MODE_DCF77,
+	MODE_MSF,
+	MODE_WWVB,
 
 	MODE_EOT,  // a dummy mode used to invoke transmission of RsID-EOT code
 	NUM_MODES,

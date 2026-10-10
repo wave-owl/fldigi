@@ -419,6 +419,10 @@ set(FLDIGI_SOURCES
 
     src/throb/throb.cxx
 
+    src/timesig/timesig.cxx
+    src/timesig/timesig_decoder.cxx
+    src/timesig/timesig_formats.cxx
+
     src/trx/modem.cxx
     src/trx/nullmodem.cxx
     src/trx/test_signal.cxx

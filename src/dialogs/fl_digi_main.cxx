@@ -3656,6 +3656,11 @@ static Fl_Menu_Item alt_menu_[] = {
 {0,0,0,0,0,0,0,0,0},
 
 { mode_info[MODE_WWV].name, 0, cb_init_mode, (void *)MODE_WWV, 0, FL_NORMAL_LABEL, 0, 14, 0},
+{"Time signals", 0, 0, 0, FL_SUBMENU, FL_NORMAL_LABEL, 0, 14, 0},
+{ mode_info[MODE_DCF77].name, 0, cb_init_mode, (void *)MODE_DCF77, 0, FL_NORMAL_LABEL, 0, 14, 0},
+{ mode_info[MODE_MSF].name, 0, cb_init_mode, (void *)MODE_MSF, 0, FL_NORMAL_LABEL, 0, 14, 0},
+{ mode_info[MODE_WWVB].name, 0, cb_init_mode, (void *)MODE_WWVB, 0, FL_NORMAL_LABEL, 0, 14, 0},
+{0,0,0,0,0,0,0,0,0},
 { mode_info[MODE_NULL].name, 0, cb_init_mode, (void *)MODE_NULL, 0, FL_NORMAL_LABEL, 0, 14, 0},
 { mode_info[MODE_SSB].name, 0, cb_init_mode, (void *)MODE_SSB, 0, FL_NORMAL_LABEL, 0, 14, 0},
 {0,0,0,0,0,0,0,0,0},
