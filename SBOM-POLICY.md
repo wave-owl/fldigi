@@ -16,6 +16,17 @@ configuration as the JSON. Existing complete asset pairs are preserved. Daily
 reconciliation also covers releases made using `GITHUB_TOKEN`, which do not trigger
 another release workflow. Schedules must remain enabled in GitHub Actions.
 
+## Mirror boundary
+
+The `wave-owl-sbom` default branch carries this automation. The original `master`
+branch and upstream tags remain untouched for fast-forward mirror synchronization.
+An upstream tag reference alone is not a published GitHub Release: mirrored tags
+do not trigger publication and receive no release assets until a corresponding
+GitHub Release is published. This workflow does not create releases or tags.
+Historical releases whose source layout differs from the current declarations
+can require a tag-specific configuration; generation fails visibly rather than
+publishing unsupported evidence.
+
 Source is inventoried without executing its build, package hooks or application
 code. Tracked source, exact Git identities, recursive gitlinks and declared
 vendored/model files provide evidence; unpinned external requirements remain
