@@ -1,0 +1,252 @@
+{
+  "gitlinks": {},
+  "vendored": [
+    {
+      "path": "src/mbedtls",
+      "repository": null,
+      "commit": null,
+      "licenses": [
+        "src/mbedtls/LICENSE"
+      ],
+      "evidence": [
+        "src/Makefile.am",
+        "src/mbedtls/LICENSE"
+      ]
+    },
+    {
+      "path": "src/include/mbedtls",
+      "repository": null,
+      "commit": null,
+      "licenses": [
+        "src/include/mbedtls/version.h"
+      ],
+      "evidence": [
+        "src/Makefile.am",
+        "src/include/mbedtls/version.h"
+      ]
+    },
+    {
+      "path": "src/libtiniconv",
+      "repository": null,
+      "commit": null,
+      "licenses": [
+        "src/libtiniconv/COPYING.LIB"
+      ],
+      "evidence": [
+        "src/Makefile.am",
+        "src/libtiniconv/COPYING.LIB"
+      ]
+    },
+    {
+      "path": "src/xmlrpcpp",
+      "repository": null,
+      "commit": null,
+      "licenses": [
+        "src/xmlrpcpp/XmlRpc.h"
+      ],
+      "evidence": [
+        "src/Makefile.am",
+        "src/xmlrpcpp/XmlRpc.h"
+      ]
+    },
+    {
+      "path": "src/irrxml",
+      "repository": null,
+      "commit": null,
+      "licenses": [
+        "src/irrxml/irrXML.h"
+      ],
+      "evidence": [
+        "src/Makefile.am",
+        "src/irrxml/irrXML.h"
+      ]
+    },
+    {
+      "path": "src/include/dr_mp3.h",
+      "repository": null,
+      "commit": null,
+      "licenses": [
+        "src/include/dr_mp3.h"
+      ],
+      "evidence": [
+        "src/Makefile.am",
+        "src/include/dr_mp3.h"
+      ]
+    },
+    {
+      "path": "src/cmedia/hid.cxx",
+      "repository": null,
+      "commit": null,
+      "licenses": [
+        "src/include/hidapi.h"
+      ],
+      "evidence": [
+        "src/Makefile.am",
+        "src/include/hidapi.h"
+      ]
+    },
+    {
+      "path": "src/cmedia/hid_lin.cxx",
+      "repository": null,
+      "commit": null,
+      "licenses": [
+        "src/include/hidapi.h"
+      ],
+      "evidence": [
+        "src/Makefile.am",
+        "src/include/hidapi.h"
+      ]
+    },
+    {
+      "path": "src/cmedia/hid_mac.cxx",
+      "repository": null,
+      "commit": null,
+      "licenses": [
+        "src/include/hidapi.h"
+      ],
+      "evidence": [
+        "src/Makefile.am",
+        "src/include/hidapi.h"
+      ]
+    },
+    {
+      "path": "src/cmedia/hid_win.cxx",
+      "repository": null,
+      "commit": null,
+      "licenses": [
+        "src/include/hidapi.h"
+      ],
+      "evidence": [
+        "src/Makefile.am",
+        "src/include/hidapi.h"
+      ]
+    },
+    {
+      "path": "src/misc/locator.c",
+      "repository": null,
+      "commit": null,
+      "licenses": [
+        "src/misc/locator.c"
+      ],
+      "evidence": [
+        "src/Makefile.am",
+        "src/misc/locator.c"
+      ]
+    },
+    {
+      "path": "src/compat/regex.c",
+      "repository": null,
+      "commit": null,
+      "licenses": [
+        "src/compat/regex.c"
+      ],
+      "evidence": [
+        "src/Makefile.am",
+        "src/compat/regex.c"
+      ]
+    },
+    {
+      "path": "src/include/gfft.h",
+      "repository": null,
+      "commit": null,
+      "licenses": [
+        "src/include/gfft.h"
+      ],
+      "evidence": [
+        "src/Makefile.am",
+        "src/include/gfft.h"
+      ]
+    },
+    {
+      "path": "src/include/dsp.h",
+      "repository": null,
+      "commit": null,
+      "licenses": [
+        "src/include/dsp.h"
+      ],
+      "evidence": [
+        "src/Makefile.am",
+        "src/include/dsp.h"
+      ]
+    },
+    {
+      "path": "src/mt63/dsp.cxx",
+      "repository": null,
+      "commit": null,
+      "licenses": [
+        "src/mt63/dsp.cxx"
+      ],
+      "evidence": [
+        "src/Makefile.am",
+        "src/mt63/dsp.cxx"
+      ]
+    }
+  ],
+  "references": [],
+  "models": [],
+  "external_libraries": [
+    {
+      "name": "FLTK",
+      "evidence": [
+        "configure.ac",
+        "src/Makefile.am"
+      ]
+    },
+    {
+      "name": "libpng",
+      "evidence": [
+        "configure.ac",
+        "src/Makefile.am"
+      ]
+    },
+    {
+      "name": "libsamplerate",
+      "evidence": [
+        "configure.ac",
+        "src/Makefile.am"
+      ]
+    },
+    {
+      "name": "libsndfile",
+      "evidence": [
+        "configure.ac",
+        "src/Makefile.am"
+      ]
+    },
+    {
+      "name": "portaudio",
+      "evidence": [
+        "configure.ac",
+        "src/Makefile.am"
+      ]
+    },
+    {
+      "name": "hamlib",
+      "evidence": [
+        "configure.ac",
+        "src/Makefile.am"
+      ]
+    },
+    {
+      "name": "libflxmlrpc",
+      "evidence": [
+        "configure.ac",
+        "src/Makefile.am"
+      ]
+    },
+    {
+      "name": "libmbedtls",
+      "evidence": [
+        "configure.ac",
+        "src/Makefile.am"
+      ]
+    },
+    {
+      "name": "Boost",
+      "evidence": [
+        "configure.ac",
+        "src/Makefile.am"
+      ]
+    }
+  ]
+}
